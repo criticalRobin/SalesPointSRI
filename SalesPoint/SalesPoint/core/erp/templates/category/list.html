@@ -1,7 +1,11 @@
 {% extends 'list.html' %}
 
+{% block message %}
+  <h1 class="m-0 text-dark"> Bienvenido <small>Área de Categorías</small></h1>
+{% endblock message %}
+
 {% block name %}
-<h3 class="card-title">Lista de Categorias</h3>
+<h3 class="card-title">Lista de Categorías</h3>
 {% endblock name %}
 
 
@@ -15,7 +19,7 @@
 
 
 {% block rows %}
-{% for c in categories %}
+{% for c in object_list %}
             <tr>
                 <td>{{ c.id }}</td>
                 <td>{{ c.name }}</td>

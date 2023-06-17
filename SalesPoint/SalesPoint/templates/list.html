@@ -1,11 +1,21 @@
 {% extends 'body.html' %}
+{% load static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'lib/datatables-1.13.4/css/dataTables.bootstrap4.min.css' %}">
+  <link rel="stylesheet" href="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/css/responsive.bootstrap4.min.css' %}">
+  <script src="{% static 'lib/datatables-1.13.4/js/jquery.dataTables.js' %}"></script>
+  <script src="{% static 'lib/datatables-1.13.4/js/dataTables.bootstrap4.min.js' %}"></script>
+  <script src="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/js/dataTables.responsive.min.js' %}"></script>
+  <script src="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/js/responsive.bootstrap4.min.js' %}"></script>
+{% endblock %}
 
 {% block content %}
   <div class="card">
     <div class="card-header border-transparent">
-        {% block name %}
-        
-        {% endblock name %}
+      {% block name %}
+
+      {% endblock %}
       <div class="card-tools">
         <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
       </div>
@@ -13,27 +23,37 @@
 
     <div class="card-body p-0">
       <div class="table-responsive">
-        <table class="table m-0">
-
+        <table class="table m-0" id="data">
           <thead>
             {% block columns %}
-            
-            {% endblock columns %}
+
+            {% endblock %}
           </thead>
 
           <tbody>
             {% block rows %}
-            
-            {% endblock rows %}
+
+            {% endblock %}
           </tbody>
         </table>
       </div>
     </div>
 
     <div class="card-footer clearfix">
-        {% block foot %}
-        
-        {% endblock foot %}
+      {% block foot %}
+
+      {% endblock %}
     </div>
   </div>
 {% endblock %}
+
+{% block javascript %}
+<script type="application/javascript">
+  $(document).ready(function () {
+    $('#data').DataTable({
+      responsive: true,
+      autoWidth: false
+    });
+  });  
+</script>
+{% endblock javascript %}

@@ -9,7 +9,7 @@ class Client(models.Model):
     surnames = models.CharField(max_length=150, verbose_name='Apellidos')
     dni = models.CharField(max_length=10, validators=[MinLengthValidator(10)], unique=True, verbose_name='Cédula')
     birth = models.DateField(default=datetime.now, verbose_name='Fecha de nacimiento')
-    address = models.CharField(null=True, blank=True, verbose_name='Dirección')
+    address = models.CharField(max_length=50, null=True, blank=True, verbose_name='Dirección')
     phone = models.CharField(max_length=10, validators=[MinLengthValidator(10)], unique=True, verbose_name='Número de teléfono')
     mail = models.CharField(max_length=50, unique=True, null=True, blank=True, verbose_name='Correo electrónico')
     GENDER_CHOICES = [

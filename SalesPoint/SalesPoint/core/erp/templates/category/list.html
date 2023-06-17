@@ -1,0 +1,35 @@
+{% extends 'list.html' %}
+
+{% block name %}
+<h3 class="card-title">Lista de Categorias</h3>
+{% endblock name %}
+
+
+{% block columns %}
+            <tr>
+              <th>Nro</th>
+              <th>Nombre</th>
+              <th>Opciones</th>
+            </tr>
+{% endblock columns %}
+
+
+{% block rows %}
+{% for c in categories %}
+            <tr>
+                <td>{{ c.id }}</td>
+                <td>{{ c.name }}</td>
+                <td>
+                    <button type="button" class="btn btn-warning"><i class='fas fa-pen-alt'></i></button>
+                    |
+                    <button type="button" class="btn btn-danger"><i class='far fa-trash-alt'></i></button>
+                </td>
+            </tr>
+            {% endfor %}
+{% endblock rows %}
+
+
+{% block foot %}
+<a href="javascript:void(0)" class="btn btn-sm btn-info float-left">Añadir Nueva Categoria <i class='fas fa-plus-circle'></i></a>
+{% endblock foot %}
+

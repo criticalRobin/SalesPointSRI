@@ -34,6 +34,9 @@
 
 
 {% block foot %}
-<a href="javascript:void(0)" class="btn btn-sm btn-info float-left">Añadir Nueva Categoria <i class='fas fa-plus-circle'></i></a>
+<form method="get" action="{% url 'erp:category_create' %}">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-sm btn-info float-left">Añadir Nueva Categoria <i class='fas fa-plus-circle'></i></button>
+</form>
 {% endblock foot %}
 

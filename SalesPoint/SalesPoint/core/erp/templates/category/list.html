@@ -24,9 +24,9 @@
                 <td>{{ c.id }}</td>
                 <td>{{ c.name }}</td>
                 <td>
-                    <button type="button" class="btn btn-warning"><i class='fas fa-pen-alt'></i></button>
+                    <a href="{% url 'erp:category_update' c.id %}" class="btn btn-warning"><i class='fas fa-pen-alt'></i></a>
                     |
-                    <button type="button" class="btn btn-danger"><i class='far fa-trash-alt'></i></button>
+                    <a href="{% url 'erp:category_delete' c.id %}" class="btn btn-danger"><i class='far fa-trash-alt'></i></a>
                 </td>
             </tr>
             {% endfor %}
@@ -39,4 +39,3 @@
   <button type="submit" class="btn btn-sm btn-info float-left">Añadir Nueva Categoria <i class='fas fa-plus-circle'></i></button>
 </form>
 {% endblock foot %}
-

@@ -60,7 +60,11 @@ class Sale(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     date_sale = models.DateField(default=datetime.now)
     subtotal = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
-    iva = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
+    IVA_CHOICES = [
+        (0.00, '0.00'),
+        (12.00, '12.00'),
+    ]
+    iva = models.DecimalField(default=0.00, max_digits=9, decimal_places=2, choices=IVA_CHOICES)
     total = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     
     def __str__(self):

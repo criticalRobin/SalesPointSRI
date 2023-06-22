@@ -3,6 +3,7 @@ from SalesPoint.core.erp.views.category.views import *
 from SalesPoint.core.erp.views.client.views import *
 from SalesPoint.core.erp.views.product.views import *
 from SalesPoint.core.erp.views.sale.views import *
+from SalesPoint.core.erp.views.tests.views import *
 
 app_name = 'erp'
 
@@ -27,4 +28,6 @@ urlpatterns = [
     path('venta/agregar/', SaleCreateView.as_view(), name='sale_create'),
     path('venta/editar/<int:pk>/', SaleUpdateView.as_view(), name='sale_update'),
     path('venta/eliminar/<int:pk>/', SaleDeleteView.as_view(), name='sale_delete'),
+    # test
+    path('test/', TestView.as_view(), name='test'),
 ]

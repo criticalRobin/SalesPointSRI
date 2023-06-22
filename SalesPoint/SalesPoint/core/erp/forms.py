@@ -1,4 +1,4 @@
-from django.forms import ModelForm, DateInput
+from django.forms import *
 from django import forms
 from SalesPoint.core.erp.models import Category, Client, Product, Sale
 
@@ -87,3 +87,20 @@ class SaleForm(ModelForm):
             'iva': 'IVA',
             'total': 'Total',
         }
+        
+        
+class TestForm(Form):
+    categories = ModelChoiceField(queryset=Category.objects.all(), widget=Select(attrs={
+        'class': 'form-control select2',
+        'style': 'width: 100%'
+    }))
+
+    products = ModelChoiceField(queryset=Product.objects.none(), widget=Select(attrs={
+        'class': 'form-control select2',
+        'style': 'width: 100%'
+    }))
+
+    search = CharField(widget=TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Ingrese una descripción'
+    }))

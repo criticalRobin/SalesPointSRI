@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime
 from django.core.validators import MinLengthValidator
+from django.forms import model_to_dict
 
 # Create your models here.
 
@@ -34,6 +35,10 @@ class Category(models.Model):
     
     def __str__(self):
         return str(self.name)
+    
+    def toJSON(self):
+        item = model_to_dict(self, exclude=['user_creation', 'user_updated'])
+        return item
     
     class Meta:
         verbose_name = 'Categoria'

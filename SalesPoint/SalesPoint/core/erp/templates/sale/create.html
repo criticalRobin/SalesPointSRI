@@ -2,13 +2,15 @@
 {% load static %}
 
 {% block head %}
-<link rel="stylesheet" href="{% static 'lib/datatables-1.13.4/css/dataTables.bootstrap4.min.css' %}">
-  <link rel="stylesheet" href="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/css/responsive.bootstrap4.min.css' %}">
-  <script src="{% static 'lib/datatables-1.13.4/js/jquery.dataTables.js' %}"></script>
-  <script src="{% static 'lib/datatables-1.13.4/js/dataTables.bootstrap4.min.js' %}"></script>
-  <script src="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/js/dataTables.responsive.min.js' %}"></script>
-  <script src="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/js/responsive.bootstrap4.min.js' %}"></script>
-<script src="{% static 'SalesPoint/core/erp/static/sale/js/form.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'lib/jquery-ui-1.12.1/jquery-ui.min.css' %}">
+    <script src="{% static 'lib/jquery-ui-1.12.1/jquery-ui.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'lib/datatables-1.13.4/css/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/css/responsive.bootstrap4.min.css' %}">
+    <script src="{% static 'lib/datatables-1.13.4/js/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.13.4/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/js/responsive.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'sale/js/form.js' %}"></script>
 {% endblock head %}
 
 {% block message %}
@@ -38,7 +40,7 @@
                             <div class="form-group">
                                 <label>Buscador de productos:</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control"
+                                    <input type="text" class="form-control" name="search"
                                            placeholder="Ingrese una descripción de producto" autocomplete="off">
                                     <span class="input-group-append">
                                         <button type="button" class="btn btn-danger btn-flat"><i
@@ -47,7 +49,7 @@
                                 </div>
                             </div>
                             <hr>
-                            <table class="table table-bordered" id="data">
+                            <table class="table table-bordered" id="tblProducts">
                                 <thead>
                                 <tr>
                                     <th>Eliminar</th>
@@ -85,6 +87,10 @@
                             <div class="form-group">
                                 <label>IVA:</label>
                                 {{ form.iva }}
+                            </div>
+                            <div class="form-group">
+                                <label>IVA Calculado:</label>
+                                <input type="text" class="form-control" readonly name="ivacalc" value="0.00">
                             </div>
                             <div class="form-group">
                                 <label>Total a pagar:</label>

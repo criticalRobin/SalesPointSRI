@@ -55,6 +55,13 @@ class Product(models.Model):
     def __str__(self):
         return str(self.name)
     
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['category'] = self.category.toJSON()
+        item['image'] = self.image.url if self.image else ''
+        item['pvp'] = format(self.pvp, '.2f')
+        return item
+    
     class Meta: 
         verbose_name = 'Producto'
         verbose_name_plural = 'Productos'

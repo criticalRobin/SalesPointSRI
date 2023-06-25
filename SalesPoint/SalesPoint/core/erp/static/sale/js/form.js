@@ -1,3 +1,4 @@
+var tblProducts;
 var vents = {
     items: {
         client: '',
@@ -24,7 +25,7 @@ var vents = {
     },
     list: function () {
         this.calculate_invoice();
-        $('#tblProducts').DataTable({
+        tblProducts = $('#tblProducts').DataTable({
             responsive: true,
             autoWidth: true,
             destroy: true,
@@ -60,10 +61,17 @@ var vents = {
                     class: 'text-center',
                     orderable: false,
                     render: function (data, type, row) {
-                        return '<input type="text" name="amount" class="form-control form-control-sm" autocomplete="off" value="' + data + '">';
+                        return '<input type="text" name="amount" class="form-control form-control-sm input-sm" autocomplete="off" value="' + data + '">';
                     }
                 },
             ],
+            rowCallback(row, data, displayNum, displayIndex, dataIndex) {
+                $(row).find('input[name="amount"]').TouchSpin({
+                    min: 0,
+                    max: 100,
+                    step: 1
+                });
+            },
             initComplete: function (settings, json) {
 
             }
@@ -103,4 +111,35 @@ $(function () {
             $(this).val('');
         }
     });
+
+    $('#tblProducts tbody').on('change keyup', 'input[name="amount"]', function () {
+        console.clear();
+        var amount = parseInt($(this).val());
+        var tr = tblProducts.cell($(this).closest('td, li')).index();
+        vents.items.products[tr.row].amount = amount;
+        vents.calculate_invoice();
+        $('td:eq(5)', tblProducts.row(tr.row).node()).html('$' + vents.items.products[tr.row].subtotal.toFixed(2));
+    });
+
+    $('.btnClearSearch').on('click', function () {
+        $('input[name="search"]').val('').focus();
+    });
+
+    // event submit sale 
+    $('form').on('submit', function (e) {
+        e.preventDefault();
+        if (vents.items.products.length === 0) {
+            message_error('No se puede realizar una venta con 0 productos');
+            return false;
+        }
+        vents.items.date_sale = $('input[name="date_sale"]').val();
+        vents.items.client = $('select[name="client]').val();
+        var parameters = new FormData(this);
+        parameters.append('action', $('input[name="action"]').val());
+        parameters.append('vents', JSON.stringify(vents.items));
+        submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de realizar la siguiente acción?', parameters, function () {
+            location.href = '/erp/producto/listado#';
+        });
+    });
+    vents.list();
 });

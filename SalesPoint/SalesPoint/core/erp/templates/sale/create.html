@@ -10,6 +10,8 @@
     <script src="{% static 'lib/datatables-1.13.4/js/dataTables.bootstrap4.min.js' %}"></script>
     <script src="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/js/dataTables.responsive.min.js' %}"></script>
     <script src="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/js/responsive.bootstrap4.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'lib/bootstrap-touchspin-4.3.0/jquery.bootstrap-touchspin.css' %}">
+    <script src="{% static 'lib/bootstrap-touchspin-4.3.0/jquery.bootstrap-touchspin.js' %}"></script>
     <script src="{% static 'sale/js/form.js' %}"></script>
 {% endblock head %}
 
@@ -18,6 +20,7 @@
 {% endblock message %}
 
 {% block content %}
+<form method="post">
     <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title">
@@ -43,7 +46,7 @@
                                     <input type="text" class="form-control" name="search"
                                            placeholder="Ingrese una descripción de producto" autocomplete="off">
                                     <span class="input-group-append">
-                                        <button type="button" class="btn btn-danger btn-flat"><i
+                                        <button type="button" class="btn btn-danger btn-flat btnClearSearch"><i
                                                 class="fas fa-times"></i></button>
                                       </span>
                                 </div>
@@ -72,6 +75,7 @@
                             <h3 class="card-title"><i class="fas fa-shopping-cart"></i> Datos de la factura</h3>
                         </div>
                         <div class="card-body">
+                            <input type="hidden" name="action" value="{{ action }}">
                             <div class="form-group">
                                 <label>Fecha de venta:</label>
                                 {{ form.date_sale }}
@@ -110,4 +114,5 @@
             </a>
         </div>
     </div>
+</form>
 {% endblock %}

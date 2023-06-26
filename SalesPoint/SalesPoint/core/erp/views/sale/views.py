@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
+from django.db import transaction
 
 
 class SaleListView(ListView):
@@ -44,7 +45,7 @@ class SaleCreateView(CreateView):
                     item['value'] = i.name
                     data.append(item)
             elif action == 'add':
-                with translation.atomic():
+                with transaction.atomic():
                     vents = json.loads(request.POST['vents'])
                     sale = Sale()
                     date_sale_str = self.request.POST.get('date_sale')

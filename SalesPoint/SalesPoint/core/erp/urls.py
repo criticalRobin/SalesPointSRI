@@ -28,6 +28,7 @@ urlpatterns = [
     path('venta/agregar/', SaleCreateView.as_view(), name='sale_create'),
     path('venta/editar/<int:pk>/', SaleUpdateView.as_view(), name='sale_update'),
     path('venta/eliminar/<int:pk>/', SaleDeleteView.as_view(), name='sale_delete'),
+    path('venta/pdf/<int:pk>/', SaleInvoicePdf.as_view(), name='sale_pdf'),
     # test
     path('test/', TestView.as_view(), name='test'),
 ]

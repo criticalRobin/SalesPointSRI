@@ -21,7 +21,7 @@ class Client(models.Model):
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default='male', verbose_name='Sexo')
     
     def __str__(self):
-        return str(self.names)
+        return f"{self.names} {self.surnames}"
     
     class Meta: 
         verbose_name = 'Cliente'

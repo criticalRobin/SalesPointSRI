@@ -112,14 +112,20 @@ $(function () {
         }
     });
 
-    $('#tblProducts tbody').on('change keyup', 'input[name="amount"]', function () {
-        console.clear();
-        var amount = parseInt($(this).val());
-        var tr = tblProducts.cell($(this).closest('td, li')).index();
-        vents.items.products[tr.row].amount = amount;
-        vents.calculate_invoice();
-        $('td:eq(5)', tblProducts.row(tr.row).node()).html('$' + vents.items.products[tr.row].subtotal.toFixed(2));
-    });
+    $('#tblProducts tbody')
+        .on('click', 'a[rel="remove"]', function () {
+            var tr = tblProducts.cell($(this).closest('td, li')).index();
+            vents.items.products.splice(tr.row, 1);
+            vents.list();
+        })
+        .on('change keyup', 'input[name="amount"]', function () {
+            console.clear();
+            var amount = parseInt($(this).val());
+            var tr = tblProducts.cell($(this).closest('td, li')).index();
+            vents.items.products[tr.row].amount = amount;
+            vents.calculate_invoice();
+            $('td:eq(5)', tblProducts.row(tr.row).node()).html('$' + vents.items.products[tr.row].subtotal.toFixed(2));
+        });
 
     $('.btnClearSearch').on('click', function () {
         $('input[name="search"]').val('').focus();

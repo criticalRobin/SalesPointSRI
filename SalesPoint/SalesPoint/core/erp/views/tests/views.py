@@ -8,7 +8,7 @@ from SalesPoint.core.erp.models import Product, Category
 
 
 class TestView(TemplateView):
-    template_name = 'tests.html'
+    template_name = "tests.html"
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -17,25 +17,29 @@ class TestView(TemplateView):
     def post(self, request, *args, **kwargs):
         data = {}
         try:
-            action = request.POST['action']
-            if action == 'search_product_id':
-                data = [{'id': '', 'text': '------------'}]
-                for i in Product.objects.filter(category_id=request.POST['id']):
-                    data.append({'id': i.id, 'text': i.name, 'data': i.category.toJSON()})
-            elif action == 'autocomplete':
+            action = request.POST["action"]
+            if action == "search_product_id":
+                data = [{"id": "", "text": "------------"}]
+                for i in Product.objects.filter(category_id=request.POST["id"]):
+                    data.append(
+                        {"id": i.id, "text": i.name, "data": i.category.toJSON()}
+                    )
+            elif action == "autocomplete":
                 data = []
-                for i in Category.objects.filter(name__icontains=request.POST['term'])[0:10]:
+                for i in Category.objects.filter(name__icontains=request.POST["term"])[
+                    0:10
+                ]:
                     item = i.toJSON()
-                    item['value'] = i.name
+                    item["value"] = i.name
                     data.append(item)
             else:
-                data['error'] = 'Ha ocurrido un error'
+                data["error"] = "Ha ocurrido un error"
         except Exception as e:
-            data['error'] = str(e)
+            data["error"] = str(e)
         return JsonResponse(data, safe=False)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Select Aninados | Django'
-        context['form'] = TestForm()
+        context["title"] = "Select Aninados | Django"
+        context["form"] = TestForm()
         return context

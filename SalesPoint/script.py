@@ -3,8 +3,10 @@ import django
 import sys
 import xml.etree.ElementTree as ET
 
-django_project_path = 'C:/Users/Matias/OneDrive/Escritorio/Data_Structure/SalesPoint/SalesPoint'
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'SalesPoint.settings')
+django_project_path = (
+    "C:/Users/Matias/OneDrive/Escritorio/Data_Structure/SalesPoint/SalesPoint"
+)
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "SalesPoint.settings")
 sys.path.append(django_project_path)
 django.setup()
 from SalesPoint.core.erp.models import SaleDetails
@@ -29,8 +31,10 @@ try:
     print("===========================================================================")
     # Iterar sobre los productos
     for sale_detail in sales:
-        print(f"Producto: {sale_detail.product.name} | Cantidad: {sale_detail.amount} | Precio: {sale_detail.price} | Subtotal: {sale_detail.subtotal}")
-    
+        print(
+            f"Producto: {sale_detail.product.name} | Cantidad: {sale_detail.amount} | Precio: {sale_detail.price} | Subtotal: {sale_detail.subtotal}"
+        )
+
     try:
         # Crear el elemento raíz del XML
         root = ET.Element("Venta")
@@ -39,7 +43,9 @@ try:
         ET.SubElement(root, "IdVenta").text = str(sale.pk)
         ET.SubElement(root, "Fecha").text = str(sale.date_sale)
         ET.SubElement(root, "CedulaCliente").text = str(sale.client.dni)
-        ET.SubElement(root, "RazonSocial").text = f"{sale.client.names} {sale.client.surnames}"
+        ET.SubElement(
+            root, "RazonSocial"
+        ).text = f"{sale.client.names} {sale.client.surnames}"
         ET.SubElement(root, "FechaNacimiento").text = str(sale.client.birth)
         ET.SubElement(root, "Contacto").text = str(sale.client.phone)
         ET.SubElement(root, "Correo").text = str(sale.client.mail)

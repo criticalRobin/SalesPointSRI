@@ -4,8 +4,10 @@ import sys
 import xml.etree.ElementTree as ET
 import uuid
 
-django_project_path = 'C:/Users/Matias/OneDrive/Escritorio/Data_Structure/SalesPoint/SalesPoint'
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'SalesPoint.settings')
+django_project_path = (
+    "C:/Users/Matias/OneDrive/Escritorio/Data_Structure/SalesPoint/SalesPoint"
+)
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "SalesPoint.settings")
 sys.path.append(django_project_path)
 django.setup()
 from SalesPoint.core.erp.models import SaleDetails
@@ -48,7 +50,7 @@ try:
         secuencial.text = "000000001"
         dir_matriz = ET.SubElement(info_tributaria, "dirMatriz")
         dir_matriz.text = "LA UTA"
-        
+
         info_factura = ET.SubElement(root, "infoFactura")
         fecha_emision = ET.SubElement(info_factura, "fechaEmision")
         fecha_emision.text = str(sale.date_sale)
@@ -56,11 +58,15 @@ try:
         dir_establecimiento.text = "LA UTA"
         obligado_contabilidad = ET.SubElement(info_factura, "obligadoContabilidad")
         obligado_contabilidad.text = "SI"
-        tipo_identificacion_comprador = ET.SubElement(info_factura, "tipoIdentificacionComprador")
+        tipo_identificacion_comprador = ET.SubElement(
+            info_factura, "tipoIdentificacionComprador"
+        )
         tipo_identificacion_comprador.text = "05"
         razon_social_comprador = ET.SubElement(info_factura, "razonSocialComprador")
         razon_social_comprador.text = f"{sale.client.names} {sale.client.surnames}"
-        identificacion_comprador = ET.SubElement(info_factura, "identificacionComprador")
+        identificacion_comprador = ET.SubElement(
+            info_factura, "identificacionComprador"
+        )
         identificacion_comprador.text = sale.client.dni
 
         # Agregar más campos adicionales
@@ -122,9 +128,13 @@ try:
             impuestos = ET.SubElement(detalle, "impuestos")
             impuesto = ET.SubElement(impuestos, "impuesto")
             codigo_impuesto = ET.SubElement(impuesto, "codigo")
-            codigo_impuesto.text = "2"  # Puedes ajustar este valor según tus necesidades
+            codigo_impuesto.text = (
+                "2"  # Puedes ajustar este valor según tus necesidades
+            )
             codigo_porcentaje_impuesto = ET.SubElement(impuesto, "codigoPorcentaje")
-            codigo_porcentaje_impuesto.text = "2"  # Puedes ajustar este valor según tus necesidades
+            codigo_porcentaje_impuesto.text = (
+                "2"  # Puedes ajustar este valor según tus necesidades
+            )
             tarifa = ET.SubElement(impuesto, "tarifa")
             tarifa.text = "0.00"  # Puedes ajustar este valor según tus necesidades
             base_imponible_impuesto = ET.SubElement(impuesto, "baseImponible")

@@ -17,12 +17,47 @@ from xhtml2pdf import pisa
 from django.contrib.staticfiles import finders
 
 
+# class SaleListView(ListView):
+#     model = Sale
+#     template_name = 'sale/list.html'
+    
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['list_url'] = reverse_lazy('erp:sale_list')
+#         context['entity'] = 'Ventas'
+#         return context
+
+
 class SaleListView(ListView):
     model = Sale
     template_name = 'sale/list.html'
-    
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'searchdata':
+                data = []
+                for i in Sale.objects.all():
+                    data.append(i.toJSON())
+            elif action == 'search_details_prod':
+                data = []
+                for i in SaleDetails.objects.filter(sale_id=request.POST['id']):
+                    data.append(i.toJSON())
+            else:
+                data['error'] = 'Ha ocurrido un error'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['title'] = 'Listado de Ventas'
+        context['create_url'] = reverse_lazy('erp:sale_create')
         context['list_url'] = reverse_lazy('erp:sale_list')
         context['entity'] = 'Ventas'
         return context
@@ -32,7 +67,7 @@ class SaleCreateView(CreateView):
     model = Sale
     form_class = SaleForm
     template_name = 'sale/create.html'
-    success_url = reverse_lazy('erp:sale_list')
+    # success_url = reverse_lazy('erp:sale_list')
     
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -79,7 +114,7 @@ class SaleCreateView(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Creación de una Venta'
-        context['list_url'] = reverse_lazy('erp:product_list')
+        context['list_url'] = reverse_lazy('erp:sale_list')
         context['entity'] = 'Ventas'
         context['action'] = 'add'
         return context

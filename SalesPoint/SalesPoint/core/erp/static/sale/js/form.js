@@ -144,7 +144,7 @@ $(function () {
         parameters.append('action', $('input[name="action"]').val());
         parameters.append('vents', JSON.stringify(vents.items));
         submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de realizar la siguiente acción?', parameters, function () {
-            location.href = '/erp/producto/listado#';
+            location.href = '/erp/venta/listado#';
         });
     });
     vents.list();

@@ -23,6 +23,12 @@ class Client(models.Model):
     def __str__(self):
         return f"{self.names} {self.surnames}"
     
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['gender'] = {'id': self.gender, 'name': self.get_gender_display()}
+        item['birth'] = self.birth.strftime('%Y-%m-%d')
+        return item
+    
     class Meta: 
         verbose_name = 'Cliente'
         verbose_name_plural = 'Clientes'
@@ -82,6 +88,16 @@ class Sale(models.Model):
     def __str__(self):
         return str(self.client.dni)
     
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['client'] = self.client.toJSON()
+        item['subtotal'] = format(self.subtotal, '.2f')
+        item['iva'] = format(self.iva, '.2f')
+        item['total'] = format(self.total, '.2f')
+        item['date_sale'] = self.date_sale.strftime('%Y-%m-%d')
+        item['det'] = [i.toJSON() for i in self.saledetails_set.all()]
+        return item
+    
     class Meta:
         verbose_name = 'Venta'
         verbose_name_plural = 'Ventas'
@@ -97,6 +113,13 @@ class SaleDetails(models.Model):
     
     def __str__(self):
         return str(self.product.name)
+    
+    def toJSON(self):
+        item = model_to_dict(self, exclude=['sale'])
+        item['product'] = self.product.toJSON()
+        item['price'] = format(self.price, '.2f')
+        item['subtotal'] = format(self.subtotal, '.2f')
+        return item
     
     class Meta:
         verbose_name = 'Detalles Venta'

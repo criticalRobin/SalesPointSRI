@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="{% static 'lib/datatables-1.13.4/css/dataTables.bootstrap4.min.css' %}">
   <link rel="stylesheet" href="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/css/responsive.bootstrap4.min.css' %}">
   <script src="{% static 'lib/datatables-1.13.4/js/jquery.dataTables.js' %}"></script>
+  <script src="{% static 'lib/datatables-1.13.4/js/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'lib/datatables-1.13.4/js/dataTables.bootstrap4.min.js' %}"></script>
   <script src="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/js/dataTables.responsive.min.js' %}"></script>
   <script src="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/js/responsive.bootstrap4.min.js' %}"></script>
@@ -48,12 +49,13 @@
 {% endblock %}
 
 {% block javascript %}
-<script type="application/javascript">
-  $(function () {
-    $('#data').DataTable({
-        responsive: true,
-        autoWidth: false
+  <script type="application/javascript">
+    $(function () {
+      $('#data').DataTable({
+          responsive: true,
+          autoWidth: false
+      });
     });
-  });
-</script>
+  </script>
+
 {% endblock javascript %}

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "widget_tweaks",
     "SalesPoint.core.erp",
+    "SalesPoint.core.homepage",
 ]
 
 MIDDLEWARE = [

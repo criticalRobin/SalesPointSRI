@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "SalesPoint.core.erp",
     "SalesPoint.core.homepage",
+    "SalesPoint.core.reports",
 ]
 
 MIDDLEWARE = [

@@ -17,7 +17,9 @@ $(function () {
         },
         columns: [
             { "data": "id" },
+            { "data": "client.dni" },
             { "data": "client.names" },
+            { "data": "client.surnames" },
             { "data": "date_sale" },
             { "data": "subtotal" },
             { "data": "iva" },

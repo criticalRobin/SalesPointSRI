@@ -1,4 +1,5 @@
 from django.urls import path
+from SalesPoint.core.erp.views.dashboard.views import DashboardView
 from SalesPoint.core.erp.views.category.views import *
 from SalesPoint.core.erp.views.client.views import *
 from SalesPoint.core.erp.views.product.views import *
@@ -8,6 +9,8 @@ from SalesPoint.core.erp.views.tests.views import *
 app_name = "erp"
 
 urlpatterns = [
+    # URLS DEL DASHBOARD
+    path("dashboard/", DashboardView.as_view(), name="dashboard"),
     # URLS DE LA PARTE DE CATEGORIAS
     path("categoria/listado", CategoryListView.as_view(), name="category_list"),
     path("categoria/agregar/", CategoryCreateView.as_view(), name="category_create"),

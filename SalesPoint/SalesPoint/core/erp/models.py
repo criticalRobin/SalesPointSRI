@@ -76,13 +76,14 @@ class Product(models.Model):
     name = models.CharField(max_length=50, verbose_name="Nombre", unique=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     image = models.ImageField(upload_to="product/%Y/%m/%d", null=True, blank=True)
+    stock = models.PositiveIntegerField(default=0, verbose_name="Stock")
     pvp = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
 
     def __str__(self):
         return str(self.name)
 
     def toJSON(self):
-        item = model_to_dict(self)
+        item = model_to_dict(self, exclude="image")
         item["category"] = self.category.toJSON()
         item["image"] = self.image.url if self.image else ""
         item["pvp"] = format(self.pvp, ".2f")

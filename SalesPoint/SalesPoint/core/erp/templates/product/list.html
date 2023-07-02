@@ -1,4 +1,16 @@
 {% extends 'list.html' %}
+{% load static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'lib/datatables-1.13.4/css/dataTables.bootstrap4.min.css' %}">
+  <link rel="stylesheet" href="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/css/responsive.bootstrap4.min.css' %}">
+  <script src="{% static 'lib/datatables-1.13.4/js/jquery.dataTables.js' %}"></script>
+  <script src="{% static 'lib/datatables-1.13.4/js/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'lib/datatables-1.13.4/js/dataTables.bootstrap4.min.js' %}"></script>
+  <script src="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/js/dataTables.responsive.min.js' %}"></script>
+  <script src="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/js/responsive.bootstrap4.min.js' %}"></script>
+  <script src="{% static 'product/js/list.js' %}"></script>
+{% endblock  %}
 
 {% block message %}
   <h1 class="m-0 text-dark"> Bienvenido <small>Área de Productos</small></h1>
@@ -14,6 +26,7 @@
               <th>Nro</th>
               <th>Nombre</th>
               <th>Categoria</th>
+              <th>Stock</th>
               <th>Imagen</th>
               <th>PVP</th>
               <th>Opciones</th>
@@ -27,15 +40,16 @@
                 <td>{{ c.id }}</td>
                 <td>{{ c.name }}</td>
                 <td>{{ c.category }}</td>
+                <td>{{ c.stock }}</td>
                 <td>
-                    <img src="/media/{{ c.image }}" class="img-fluid d-block" style="width: 48px; height: 48px;">
+                    {% comment %} <img src="/media/{{ c.image }}" class="img-fluid d-block" style="width: 48px; height: 48px;"> {% endcomment %}
                 </td>
                 <td>${{ c.pvp }}</td>
-                <td>
+                {% comment %} <td>
                     <a href="{% url 'erp:product_update' c.id %}" class="btn btn-warning"><i class='fas fa-pen-alt'></i></a>
                     |
                     <a href="{% url 'erp:product_delete' c.id %}" class="btn btn-danger"><i class='far fa-trash-alt'></i></a>
-                </td>
+                </td> {% endcomment %}
             </tr>
             {% endfor %}
 {% endblock rows %}
@@ -47,3 +61,7 @@
   <button type="submit" class="btn btn-sm btn-info float-left">Añadir Nuevo Producto <i class='fas fa-plus-circle'></i></button>
 </form>
 {% endblock foot %}
+
+{% block javascript %}
+
+{% endblock  %}

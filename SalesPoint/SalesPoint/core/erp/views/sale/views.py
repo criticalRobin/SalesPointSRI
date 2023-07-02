@@ -85,10 +85,11 @@ class SaleCreateView(CreateView):
             action = request.POST["action"]
             if action == "search_products":
                 data = []
-                prods = Product.objects.filter(name__icontains=request.POST["term"])[
-                    0:10
-                ]
-                for i in prods:
+                # prods = Product.objects.filter(name__icontains=request.POST["term"])[
+                #     0:10
+                # ]
+                prods = Product.objects.filter(name__icontains=request.POST["term"], stock__gt=0)
+                for i in prods[0:10]:
                     item = i.toJSON()
                     item["value"] = i.name
                     data.append(item)
@@ -115,6 +116,8 @@ class SaleCreateView(CreateView):
                         det.product_id = i["id"]
                         det.sale_id = sale.id
                         det.save()
+                        det.product.stock -= det.amount
+                        det.product.save()
             else:
                 data["error"] = "No ha ingresado una opcion"
         except Exception as e:

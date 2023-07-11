@@ -14,21 +14,21 @@
         <dirMatriz>LA UTA</dirMatriz>
     </infoTributaria>
     <infoFactura>
-        <fechaEmision>2023-06-24</fechaEmision>
+        <fechaEmision>2023-04-02</fechaEmision>
         <dirEstablecimiento>LA UTA</dirEstablecimiento>
         <obligadoContabilidad>SI</obligadoContabilidad>
         <tipoIdentificacionComprador>05</tipoIdentificacionComprador>
-        <razonSocialComprador>Henry Cortez</razonSocialComprador>
-        <identificacionComprador>1703154785</identificacionComprador>
-        <idCompra>2</idCompra>
-        <totalSinImpuestos>14.84</totalSinImpuestos>
+        <razonSocialComprador>Edder Naranjo</razonSocialComprador>
+        <identificacionComprador>1720314569</identificacionComprador>
+        <idCompra>25</idCompra>
+        <totalSinImpuestos>59.50</totalSinImpuestos>
         <totalDescuento>0.00</totalDescuento>
         <totalConImpuestos>
             <totalImpuesto>
                 <codigo>2</codigo>
                 <codigoPorcentaje>2</codigoPorcentaje>
                 <baseImponible>1.000</baseImponible>
-                <valor>1.78</valor>
+                <valor>7.14</valor>
             </totalImpuesto>
         </totalConImpuestos>
         <propina>0.00</propina>
@@ -37,7 +37,7 @@
         <pagos>
             <pago>
                 <formaPago>01</formaPago>
-                <total>16.62</total>
+                <total>66.64</total>
                 <plazo>30</plazo>
                 <unidadTiempo>dias</unidadTiempo>
             </pago>
@@ -45,52 +45,103 @@
     </infoFactura>
     <detalles>
         <detalle>
-            <codigoPrincipal>49d3248f</codigoPrincipal>
-            <descripcion>Coca-Cola</descripcion>
-            <cantidad>4</cantidad>
-            <precioUnitario>0.95</precioUnitario>
+            <codigoPrincipal>06cc98a6</codigoPrincipal>
+            <descripcion>Cerveza Pilsener</descripcion>
+            <cantidad>12</cantidad>
+            <precioUnitario>1.15</precioUnitario>
             <descuento>0.00</descuento>
-            <precioTotalSinImpuesto>3.80</precioTotalSinImpuesto>
+            <precioTotalSinImpuesto>13.80</precioTotalSinImpuesto>
             <impuestos>
                 <impuesto>
                     <codigo>2</codigo>
                     <codigoPorcentaje>2</codigoPorcentaje>
                     <tarifa>0.00</tarifa>
-                    <baseImponible>3.80</baseImponible>
+                    <baseImponible>13.80</baseImponible>
                     <valor>0.00</valor>
                 </impuesto>
             </impuestos>
         </detalle>
         <detalle>
-            <codigoPrincipal>41964f63</codigoPrincipal>
-            <descripcion>Magnum Rosita</descripcion>
-            <cantidad>4</cantidad>
-            <precioUnitario>2.00</precioUnitario>
+            <codigoPrincipal>228012c2</codigoPrincipal>
+            <descripcion>Ruffles</descripcion>
+            <cantidad>5</cantidad>
+            <precioUnitario>0.50</precioUnitario>
             <descuento>0.00</descuento>
-            <precioTotalSinImpuesto>8.00</precioTotalSinImpuesto>
+            <precioTotalSinImpuesto>2.50</precioTotalSinImpuesto>
             <impuestos>
                 <impuesto>
                     <codigo>2</codigo>
                     <codigoPorcentaje>2</codigoPorcentaje>
                     <tarifa>0.00</tarifa>
-                    <baseImponible>8.00</baseImponible>
+                    <baseImponible>2.50</baseImponible>
                     <valor>0.00</valor>
                 </impuesto>
             </impuestos>
         </detalle>
         <detalle>
-            <codigoPrincipal>30109b45</codigoPrincipal>
-            <descripcion>Fresas</descripcion>
-            <cantidad>4</cantidad>
-            <precioUnitario>0.76</precioUnitario>
+            <codigoPrincipal>a83861dc</codigoPrincipal>
+            <descripcion>Chicles Trident</descripcion>
+            <cantidad>1</cantidad>
+            <precioUnitario>0.30</precioUnitario>
             <descuento>0.00</descuento>
-            <precioTotalSinImpuesto>3.04</precioTotalSinImpuesto>
+            <precioTotalSinImpuesto>0.30</precioTotalSinImpuesto>
             <impuestos>
                 <impuesto>
                     <codigo>2</codigo>
                     <codigoPorcentaje>2</codigoPorcentaje>
                     <tarifa>0.00</tarifa>
-                    <baseImponible>3.04</baseImponible>
+                    <baseImponible>0.30</baseImponible>
+                    <valor>0.00</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+        <detalle>
+            <codigoPrincipal>8c59a38c</codigoPrincipal>
+            <descripcion>Casero</descripcion>
+            <cantidad>3</cantidad>
+            <precioUnitario>0.80</precioUnitario>
+            <descuento>0.00</descuento>
+            <precioTotalSinImpuesto>2.40</precioTotalSinImpuesto>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>2</codigoPorcentaje>
+                    <tarifa>0.00</tarifa>
+                    <baseImponible>2.40</baseImponible>
+                    <valor>0.00</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+        <detalle>
+            <codigoPrincipal>cb573168</codigoPrincipal>
+            <descripcion>Aguacates</descripcion>
+            <cantidad>10</cantidad>
+            <precioUnitario>1.30</precioUnitario>
+            <descuento>0.00</descuento>
+            <precioTotalSinImpuesto>13.00</precioTotalSinImpuesto>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>2</codigoPorcentaje>
+                    <tarifa>0.00</tarifa>
+                    <baseImponible>13.00</baseImponible>
+                    <valor>0.00</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+        <detalle>
+            <codigoPrincipal>cd62ebc8</codigoPrincipal>
+            <descripcion>Pollo</descripcion>
+            <cantidad>10</cantidad>
+            <precioUnitario>2.75</precioUnitario>
+            <descuento>0.00</descuento>
+            <precioTotalSinImpuesto>27.50</precioTotalSinImpuesto>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>2</codigoPorcentaje>
+                    <tarifa>0.00</tarifa>
+                    <baseImponible>27.50</baseImponible>
                     <valor>0.00</valor>
                 </impuesto>
             </impuestos>

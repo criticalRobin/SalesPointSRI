@@ -5,6 +5,37 @@ from django.forms import model_to_dict
 
 # Create your models here.
 
+class Entity(models.Model):
+    ruc = models.CharField(max_length=13, verbose_name="RUC", unique=True)
+    social_reason = models.CharField(max_length=50, verbose_name="Razón Social")
+    commercial_name = models.CharField(max_length=50, verbose_name="Nombre Comercial")
+    main_address = models.CharField(max_length=50, verbose_name="Dirección Matriz")
+    stablishement_address = models.CharField(max_length=50, verbose_name="Dirección Establecimiento")
+    stablishement_code = models.CharField(max_length=3, verbose_name="Código Establecimiento")
+    emition_point_code = models.CharField(max_length=3, verbose_name="Código Punto de Emisión")
+    CONTABILITY_CHOICES = [
+        ("SI", "SI"),
+        ("NO", "NO"),
+    ]
+    contability_obligation = models.CharField(max_length=2, choices=CONTABILITY_CHOICES, verbose_name="Obligado a llevar contabilidad")
+    logo = models.ImageField(upload_to="product/%Y/%m/%d", null=True, blank=True)
+    ENVIROMENT_CHOICES = [
+        ("PRODUCCION", "PRODUCCION"),
+        ("PRUEBAS", "PRUEBAS"),
+    ]
+    enviroment = models.CharField(max_length=10, choices=ENVIROMENT_CHOICES, verbose_name="Entorno")
+    
+    def __str__(self):
+        return f"{self.social_reason}"
+
+    # def toJSON(self):
+        
+    
+    class Meta:
+        verbose_name = "Entidad"
+        verbose_name_plural = "Entidades"
+        ordering = ["id"]
+
 
 class Client(models.Model):
     names = models.CharField(max_length=150, verbose_name="Nombres")

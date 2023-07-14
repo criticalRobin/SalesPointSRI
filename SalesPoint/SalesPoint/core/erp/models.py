@@ -260,12 +260,15 @@ class SaleDetails(models.Model):
     price = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     amount = models.PositiveIntegerField(default=0)
     subtotal = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
+    total = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
 
     def __str__(self):
         return str(self.product.name)
 
     def calculate_subtotal(self):
         self.subtotal = self.price * self.amount
+        iva = Decimal(self.product.iva)
+        self.total = Decimal(self.subtotal) * Decimal(1 + (iva / 100))
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)  # Guardar la instancia antes de calcular el subtotal
@@ -280,6 +283,7 @@ class SaleDetails(models.Model):
             'price': format(self.price, ".2f"),
             'amount': self.amount,
             'subtotal': format(self.subtotal, ".2f"),
+            'total': format(self.total, ".2f"),
         }
         return item
 

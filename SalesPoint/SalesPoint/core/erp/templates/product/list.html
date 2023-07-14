@@ -29,6 +29,8 @@
               <th>Stock</th>
               <th>Imagen</th>
               <th>PVP</th>
+              <th>IVA</th>
+              <th>Precio Venta</th>
               <th>Opciones</th>
             </tr>
 {% endblock columns %}
@@ -45,6 +47,8 @@
                     {% comment %} <img src="/media/{{ c.image }}" class="img-fluid d-block" style="width: 48px; height: 48px;"> {% endcomment %}
                 </td>
                 <td>${{ c.pvp }}</td>
+                <td>{{ c.iva }}</td>
+                <td>${{ c.sale_price }}</td>
                 {% comment %} <td>
                     <a href="{% url 'erp:product_update' c.id %}" class="btn btn-warning"><i class='fas fa-pen-alt'></i></a>
                     |

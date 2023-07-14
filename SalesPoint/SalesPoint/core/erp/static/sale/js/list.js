@@ -22,13 +22,13 @@ $(function () {
             { "data": "client.surnames" },
             { "data": "date_sale" },
             { "data": "subtotal" },
-            { "data": "iva" },
+            // { "data": "iva" },
             { "data": "total" },
             { "data": "id" },
         ],
         columnDefs: [
             {
-                targets: [-2, -3, -4],
+                targets: [-2, -3],
                 class: 'text-center',
                 orderable: false,
                 render: function (data, type, row) {
@@ -63,7 +63,6 @@ $(function () {
                 autoWidth: false,
                 destroy: true,
                 deferRender: true,
-                //data: data.det,
                 ajax: {
                     url: window.location.pathname,
                     type: 'POST',
@@ -71,7 +70,7 @@ $(function () {
                         'action': 'search_details_prod',
                         'id': data.id
                     },
-                    dataSrc: ""
+                    dataSrc: "saledetails_set" // Cambio en la propiedad dataSrc
                 },
                 columns: [
                     { "data": "product.name" },

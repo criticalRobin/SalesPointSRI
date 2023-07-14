@@ -1,3 +1,4 @@
+from decimal import Decimal
 from gettext import translation
 import json
 from django.http import (
@@ -53,6 +54,7 @@ class SaleListView(ListView):
             elif action == "search_details_prod":
                 data = []
                 for i in SaleDetails.objects.filter(sale_id=request.POST["id"]):
+                    print(i)
                     data.append(i.toJSON())
             else:
                 data["error"] = "Ha ocurrido un error"
@@ -73,7 +75,6 @@ class SaleCreateView(CreateView):
     model = Sale
     form_class = SaleForm
     template_name = "sale/create.html"
-    # success_url = reverse_lazy('erp:sale_list')
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -85,9 +86,6 @@ class SaleCreateView(CreateView):
             action = request.POST["action"]
             if action == "search_products":
                 data = []
-                # prods = Product.objects.filter(name__icontains=request.POST["term"])[
-                #     0:10
-                # ]
                 prods = Product.objects.filter(name__icontains=request.POST["term"], stock__gt=0)
                 for i in prods[0:10]:
                     item = i.toJSON()
@@ -98,13 +96,8 @@ class SaleCreateView(CreateView):
                     vents = json.loads(request.POST["vents"])
                     sale = Sale()
                     date_sale_str = self.request.POST.get("date_sale")
-                    date_sale = datetime.strptime(date_sale_str, "%d/%m/%Y").strftime(
-                        "%Y-%m-%d"
-                    )
+                    date_sale = datetime.strptime(date_sale_str, "%d/%m/%Y").strftime("%Y-%m-%d")
                     sale.date_sale = date_sale
-                    sale.subtotal = float(vents["subtotal"])
-                    sale.iva = float(vents["iva"])
-                    sale.total = float(vents["total"])
                     sale.client_id = self.request.POST.get("client")
                     sale.save()
 
@@ -112,14 +105,26 @@ class SaleCreateView(CreateView):
                         det = SaleDetails()
                         det.price = float(i["pvp"])
                         det.amount = int(i["amount"])
-                        det.subtotal = float(i["subtotal"])
                         det.product_id = i["id"]
-                        det.sale_id = sale.id
+                        det.sale = sale  # Asignar el objeto Sale a SaleDetails
                         det.save()
                         det.product.stock -= det.amount
                         det.product.save()
+
+                    sale.calculate_total()  # Calcular subtotal y total
+                    sale.save()  # Guardar Sale actualizado
+
+                    # Actualizar los valores de subtotal y total en el formulario
+                    form = self.get_form()
+                    form.instance = sale
+                    form.fields["subtotal"].initial = sale.subtotal
+                    form.fields["total"].initial = sale.total
+
+                    if form.is_valid():
+                        form.save()
             else:
-                data["error"] = "No ha ingresado una opcion"
+                raise Exception("El formulario no es válido")
+
         except Exception as e:
             data["error"] = str(e)
         return JsonResponse(data, safe=False)
@@ -194,24 +199,22 @@ class SaleInvoicePdf(View):
 
     def get(self, request, *args, **kwargs):
         try:
+            sale = Sale.objects.get(pk=self.kwargs["pk"])
+            # products_iva_12 = sale.details.filter(product__iva="12.00")
+            # iva_12_total = sum(product.subtotal * Decimal("0.12") for product in products_iva_12)
             template = get_template("sale/invoice.html")
             context = {
-                "sale": Sale.objects.get(pk=self.kwargs["pk"]),
+                "sale": sale,
                 "comp": {
                     "name": "TIENDITA S.A.",
                     "ruc": "9999999999999",
                     "address": "Su Corazón",
                 },
-                # 'icon': '{}{}'.format(settings.STATIC_URL, 'noviaaaa.jpg'),
+                # "iva_12_total": iva_12_total,
             }
             html = template.render(context)
             response = HttpResponse(content_type="application/pdf")
-            # response['Content-Disposition'] = 'attachment; filename="report.pdf"'
-            pisa_status = pisa.CreatePDF(
-                html,
-                dest=response,
-                # link_callback=self.link_callback
-            )
+            pisa_status = pisa.CreatePDF(html, dest=response)
             return response
         except Exception as e:
             print(e)

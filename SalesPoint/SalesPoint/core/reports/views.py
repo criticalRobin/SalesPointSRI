@@ -35,7 +35,7 @@ class ReportSaleView(TemplateView):
                         s.client.surnames,
                         s.date_sale.strftime('%Y-%m-%d'),
                         format(s.subtotal, '.2f'),
-                        format(s.iva, '.2f'),
+                        # format(s.iva, '.2f'),
                         format(s.total, '.2f'),
                     ])
             else:

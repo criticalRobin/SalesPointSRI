@@ -3,23 +3,32 @@ var vents = {
     items: {
         client: '',
         date_sale: '',
-        subtotal: 0.00,
+        subtotalPVP: 0.00,
+        subtotalSalePrice: 0.00,
         iva: 0.00,
         total: 0.00,
         products: []
     },
     calculate_invoice: function () {
-        var subtotal = 0.00;
-        var iva = parseFloat($('select[name="iva"]').val());
-        $.each(this.items.products, function (pos, dict) {
-            dict.subtotal = dict.amount * parseFloat(dict.pvp);
-            subtotal += dict.subtotal;
-        });
-        this.items.subtotal = subtotal;
-        this.items.iva = this.items.subtotal * (iva / 100);
-        this.items.total = this.items.subtotal + this.items.iva;
+        var subtotalPVP = 0.00;
+        var subtotalSalePrice = 0.00;
+        var without_iva = parseFloat($('select[name="iva"]').val());
 
-        $('input[name="subtotal"]').val(this.items.subtotal.toFixed(2));
+        $.each(this.items.products, function (pos, dict) {
+            dict.subtotalPVP = dict.amount * parseFloat(dict.pvp);
+            dict.subtotalSalePrice = dict.amount * parseFloat(dict.sale_price);
+            subtotalPVP += dict.subtotalPVP;
+            subtotalSalePrice += dict.subtotalSalePrice;
+        });
+
+        this.items.subtotalPVP = subtotalPVP;
+        this.items.subtotalSalePrice = subtotalSalePrice;
+
+        this.items.iva = (this.items.subtotalPVP * (without_iva / 100)) + (this.items.subtotalSalePrice * (without_iva / 100));
+        this.items.total = this.items.subtotalPVP + this.items.subtotalSalePrice + this.items.iva;
+
+        $('input[name="subtotalPVP"]').val(this.items.subtotalPVP.toFixed(2));
+        $('input[name="subtotalSalePrice"]').val(this.items.subtotalSalePrice.toFixed(2));
         $('input[name="ivacalc"]').val(this.items.iva.toFixed(2));
         $('input[name="total"]').val(this.items.total.toFixed(2));
     },
@@ -37,7 +46,8 @@ var vents = {
                 { "data": "stock" },
                 { "data": "pvp" },
                 { "data": "amount" },
-                { "data": "subtotal" },
+                { "data": "subtotalPVP" },
+                { "data": "subtotalSalePrice" },
             ],
             columnDefs: [
                 {
@@ -49,7 +59,7 @@ var vents = {
                     }
                 },
                 {
-                    targets: [-3, -1],
+                    targets: [-4, -2, -1],
                     class: 'text-center',
                     orderable: false,
                     render: function (data, type, row) {
@@ -57,7 +67,7 @@ var vents = {
                     }
                 },
                 {
-                    targets: [-2],
+                    targets: [-3],
                     class: 'text-center',
                     orderable: false,
                     render: function (data, type, row) {
@@ -65,15 +75,7 @@ var vents = {
                     }
                 },
                 {
-                    targets: [0],
-                    class: 'text-center',
-                    orderable: false,
-                    render: function (data, type, row) {
-                        return '<a rel="remove" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-trash-alt"></i></a>';
-                    }
-                },
-                {
-                    targets: [-4],
+                    targets: [-5],
                     class: 'text-center',
                     orderable: false,
                     render: function (data, type, row) {
@@ -123,7 +125,8 @@ $(function () {
             event.preventDefault();
             console.clear();
             ui.item.amount = 1;
-            ui.item.subtotal = 0.00;
+            ui.item.subtotalPVP = 0.00;
+            ui.item.subtotalSalePrice = 0.00;
             console.log(vents.items);
             vents.items.products.push(ui.item);
             vents.list();
@@ -143,7 +146,8 @@ $(function () {
             var tr = tblProducts.cell($(this).closest('td, li')).index();
             vents.items.products[tr.row].amount = amount;
             vents.calculate_invoice();
-            $('td:eq(5)', tblProducts.row(tr.row).node()).html('$' + vents.items.products[tr.row].subtotal.toFixed(2));
+            $('td:eq(5)', tblProducts.row(tr.row).node()).html('$' + vents.items.products[tr.row].subtotalPVP.toFixed(2));
+            $('td:eq(6)', tblProducts.row(tr.row).node()).html('$' + vents.items.products[tr.row].subtotalSalePrice.toFixed(2));
         });
 
     $('.btnClearSearch').on('click', function () {
@@ -158,13 +162,23 @@ $(function () {
             return false;
         }
         vents.items.date_sale = $('input[name="date_sale"]').val();
-        vents.items.client = $('select[name="client]').val();
+        vents.items.client = $('select[name="client"]').val();
+
+        vents.calculate_invoice();
+
         var parameters = new FormData(this);
         parameters.append('action', $('input[name="action"]').val());
         parameters.append('vents', JSON.stringify(vents.items));
-        submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de realizar la siguiente acción?', parameters, function () {
+
+        submit_with_ajax(window.location.pathname, 'Notificación', '¿Estás seguro de realizar la siguiente acción?', parameters, function (response) {
+            // if (!response.hasOwnProperty('error')) {
+            //     location.href = '/erp/venta/listado#';
+            // } else {
+            //     message_error(response.error);
+            // }
             location.href = '/erp/venta/listado#';
         });
     });
+
     vents.list();
 });

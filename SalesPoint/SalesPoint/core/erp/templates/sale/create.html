@@ -61,6 +61,7 @@
                                     <th>PVP</th>
                                     <th>Cantidad</th>
                                     <th>Subtotal</th>
+                                    <th>Total</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -86,19 +87,24 @@
                             </div>
                             <div class="form-group">
                                 <label>Subtotal:</label>
-                                {{ form.subtotal }}
+                                <input type="text" class="form-control" readonly name="subtotalPVP" value="0.00">
                             </div>
-                            <div class="form-group">
+                            {% comment %} <div class="form-group">
+                                <label>Total:</label>
+                                <input type="text" class="form-control" readonly name="subtotalSalePrice" value="0.00">
+                            </div> {% endcomment %}
+                            {% comment %} <div class="form-group">
                                 <label>IVA:</label>
                                 {{ form.iva }}
-                            </div>
-                            <div class="form-group">
+                            </div> {% endcomment %}
+                            {% comment %} <div class="form-group">
                                 <label>IVA Calculado:</label>
                                 <input type="text" class="form-control" readonly name="ivacalc" value="0.00">
-                            </div>
+                            </div> {% endcomment %}
                             <div class="form-group">
                                 <label>Total a pagar:</label>
-                                {{ form.total }}
+                                {% comment %} {{ form.total }} {% endcomment %}
+                                <input type="text" class="form-control" readonly name="subtotalSalePrice" value="0.00">
                             </div>
                         </div>
                     </div>

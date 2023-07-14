@@ -48,32 +48,34 @@
 </p>
 <table id="invoice">
     <thead>
-    <tr>
-        <th style="width: 20%;">CATEGORIA</th>
-        <th style="width: 40%;">PRODUCTO</th>
-        <th style="width: 10%;">CANT</th>
-        <th style="width: 15%;">P.UNITARIO</th>
-        <th style="width: 15%;">TOTAL</th>
-    </tr>
+        <tr>
+            <th style="width: 20%;">CATEGORIA</th>
+            <th style="width: 40%;">PRODUCTO</th>
+            <th style="width: 10%;">CANT</th>
+            <th style="width: 15%;">P.UNITARIO</th>
+            <th style="width: 15%;">IVA</th>
+            <th style="width: 15%;">TOTAL</th>
+        </tr>
     </thead>
     <tbody>
-    {% for d in sale.saledetails_set.all %}
-        <tr {% if forloop.first %}style="padding-top: 3px;" {% endif %}>
-            <td>{{ d.product.category.name }}</td>
-            <td>{{ d.product.name }}</td>
-            <td class="text-center">{{ d.amount }}</td>
-            <td class="text-center">${{ d.price }}</td>
-            <td style="text-align: right;">${{ d.subtotal }}</td>
-        </tr>
-    {% endfor %}
+        {% for d in sale.details.all %}
+            <tr {% if forloop.first %}style="padding-top: 3px;" {% endif %}>
+                <td>{{ d.product.category.name }}</td>
+                <td>{{ d.product.name }}</td>
+                <td class="text-center">{{ d.amount }}</td>
+                <td class="text-center">${{ d.price }}</td>
+                <td class="text-center">{{ d.product.iva }}%</td>
+                <td style="text-align: right;">${{ d.subtotal }}</td>
+            </tr>
+        {% endfor %}
     <tr style="border-top: 1px solid black; padding-top: 4px;">
         <td colspan="4"><b>SUBTOTAL</b></td>
         <td style="text-align: right">${{ sale.subtotal }}</td>
     </tr>
-    <tr style="padding-top: 0px;">
+    {% comment %} <tr style="padding-top: 0px;">
         <td colspan="4"><b>IVA 12%</b></td>
-        <td style="text-align: right">${{ sale.iva }}</td>
-    </tr>
+        <td style="text-align: right">${{ iva_12_total }}</td>
+    </tr> {% endcomment %}
     <tr style="padding-top: 0px;">
         <td colspan="4"><b>TOTAL A PAGAR</b></td>
         <td style="text-align: right">${{ sale.total }}</td>

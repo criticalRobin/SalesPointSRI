@@ -94,7 +94,7 @@ function generate_report() {
         ],
         columnDefs: [
             {
-                targets: [-1, -2, -3],
+                targets: [-1, -2],
                 class: 'text-center',
                 orderable: false,
                 render: function (data, type, row) {

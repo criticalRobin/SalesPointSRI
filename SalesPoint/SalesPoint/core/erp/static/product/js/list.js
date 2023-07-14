@@ -19,11 +19,13 @@ $(function () {
             { "data": "stock" },
             { "data": "image" },
             { "data": "pvp" },
+            { "data": "iva" },
+            { "data": "sale_price" },
             { "data": "id" },
         ],
         columnDefs: [
             {
-                targets: [-3],
+                targets: [-5],
                 class: 'text-center',
                 orderable: false,
                 render: function (data, type, row) {
@@ -31,7 +33,7 @@ $(function () {
                 }
             },
             {
-                targets: [-4],
+                targets: [-6],
                 class: 'text-center',
                 orderable: false,
                 render: function (data, type, row) {
@@ -39,6 +41,22 @@ $(function () {
                         return '<span class="badge badge-success">' + data + '</span>'
                     }
                     return '<span class="badge badge-danger">' + data + '</span>'
+                }
+            },
+            {
+                targets: [-3],
+                class: 'text-center',
+                orderable: false,
+                render: function (data, type, row) {
+                    return data + '%';
+                }
+            },
+            {
+                targets: [-4],
+                class: 'text-center',
+                orderable: false,
+                render: function (data, type, row) {
+                    return '$' + parseFloat(data).toFixed(2);
                 }
             },
             {

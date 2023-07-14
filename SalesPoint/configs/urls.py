@@ -22,7 +22,8 @@ from SalesPoint.core.homepage.views import IndexView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("login/", include("SalesPoint.core.login.urls")),
     path("erp/", include("SalesPoint.core.erp.urls")),
-    path("", IndexView.as_view()),
+    path("", IndexView.as_view(), name="index"),
     path("rpt/", include("SalesPoint.core.reports.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

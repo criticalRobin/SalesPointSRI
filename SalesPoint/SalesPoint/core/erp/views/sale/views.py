@@ -1,12 +1,10 @@
-from decimal import Decimal
-from gettext import translation
+# from decimal import Decimal
+# from gettext import translation
 import json
 from django.http import (
-    HttpRequest,
     HttpResponse,
     HttpResponseRedirect,
     JsonResponse,
-    QueryDict,
 )
 from django.shortcuts import render
 from SalesPoint.core.erp.models import Sale, Product, SaleDetails
@@ -17,11 +15,12 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 from django.db import transaction
-import os
-from django.conf import settings
+# import os
+# from django.conf import settings
 from django.template.loader import get_template
 from xhtml2pdf import pisa
-from django.contrib.staticfiles import finders
+# from django.contrib.staticfiles import finders
+from django.contrib.auth.decorators import login_required
 
 
 # class SaleListView(ListView):
@@ -40,6 +39,7 @@ class SaleListView(ListView):
     template_name = "sale/list.html"
 
     @method_decorator(csrf_exempt)
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
@@ -77,6 +77,7 @@ class SaleCreateView(CreateView):
     template_name = "sale/create.html"
 
     @method_decorator(csrf_exempt)
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
@@ -143,6 +144,11 @@ class SaleUpdateView(UpdateView):
     form_class = SaleForm
     template_name = "sale/create.html"
     success_url = reverse_lazy("erp:sale_list")
+    
+    @method_decorator(csrf_exempt)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -156,6 +162,11 @@ class SaleDeleteView(DeleteView):
     model = Sale
     template_name = "sale/delete.html"
     success_url = reverse_lazy("erp:sale_list")
+    
+    @method_decorator(csrf_exempt)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -166,6 +177,10 @@ class SaleDeleteView(DeleteView):
 
 
 class SaleInvoicePdf(View):
+    @method_decorator(csrf_exempt)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
     # def link_callback(self, uri, rel):
     #         """
     #         Convert HTML URIs to absolute system paths so xhtml2pdf can access those

@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django.forms import FloatField
@@ -8,6 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.db.models import FloatField
+from django.contrib.auth.decorators import login_required
 
 from SalesPoint.core.erp.models import Sale, Product, SaleDetails
 
@@ -16,6 +16,7 @@ class DashboardView(TemplateView):
     template_name = "dashboard.html"
 
     @method_decorator(csrf_exempt)
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 

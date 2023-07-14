@@ -1,4 +1,4 @@
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from SalesPoint.core.erp.models import Product
 from SalesPoint.core.erp.forms import ProductForm
@@ -6,6 +6,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 
 class ProductListView(ListView):
@@ -13,6 +14,7 @@ class ProductListView(ListView):
     template_name = 'product/list.html'
 
     @method_decorator(csrf_exempt)
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
@@ -44,6 +46,11 @@ class ProductCreateView(CreateView):
     form_class = ProductForm
     template_name = "product/create.html"
     success_url = reverse_lazy("erp:product_list")
+    
+    @method_decorator(csrf_exempt)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         form = ProductForm(request.POST, request.FILES)
@@ -68,6 +75,11 @@ class ProductUpdateView(UpdateView):
     form_class = ProductForm
     template_name = "product/create.html"
     success_url = reverse_lazy("erp:product_list")
+    
+    @method_decorator(csrf_exempt)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -81,6 +93,11 @@ class ProductDeleteView(DeleteView):
     model = Product
     template_name = "product/delete.html"
     success_url = reverse_lazy("erp:product_list")
+    
+    @method_decorator(csrf_exempt)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -1,15 +1,23 @@
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from SalesPoint.core.erp.models import Client
 from SalesPoint.core.erp.forms import ClientForm
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.forms.widgets import TextInput
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 
 class ClientListView(ListView):
     model = Client
     template_name = "client/list.html"
+    
+    @method_decorator(csrf_exempt)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -23,6 +31,11 @@ class ClientCreateView(CreateView):
     form_class = ClientForm
     template_name = "client/create.html"
     success_url = reverse_lazy("erp:client_list")
+    
+    @method_decorator(csrf_exempt)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         form = ClientForm(request.POST)
@@ -47,6 +60,11 @@ class ClientUpdateView(UpdateView):
     form_class = ClientForm
     template_name = "client/create.html"
     success_url = reverse_lazy("erp:client_list")
+    
+    @method_decorator(csrf_exempt)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -61,6 +79,11 @@ class ClientDeleteView(DeleteView):
     model = Client
     template_name = "client/delete.html"
     success_url = reverse_lazy("erp:client_list")
+    
+    @method_decorator(csrf_exempt)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -1,5 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from SalesPoint.core.erp.mixins import CategorySuperMixin
 from SalesPoint.core.erp.models import Category
 from SalesPoint.core.erp.forms import CategoryForm
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -25,7 +26,7 @@ class CategoryListView(ListView):
         return context
 
 
-class CategoryCreateView(CreateView):
+class CategoryCreateView(CategorySuperMixin, CreateView):
     model = Category
     form_class = CategoryForm
     template_name = "category/create.html"
@@ -54,7 +55,7 @@ class CategoryCreateView(CreateView):
         return context
 
 
-class CategoryUpdateView(UpdateView):
+class CategoryUpdateView(CategorySuperMixin, UpdateView):
     model = Category
     form_class = CategoryForm
     template_name = "category/create.html"
@@ -73,7 +74,7 @@ class CategoryUpdateView(UpdateView):
         return context
 
 
-class CategoryDeleteView(DeleteView):
+class CategoryDeleteView(CategorySuperMixin, DeleteView):
     model = Category
     template_name = "category/delete.html"
     success_url = reverse_lazy("erp:category_list")

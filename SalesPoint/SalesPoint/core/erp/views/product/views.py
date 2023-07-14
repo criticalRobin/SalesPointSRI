@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+from SalesPoint.core.erp.mixins import ProductSuperMixin
 
 
 class ProductListView(ListView):
@@ -41,7 +42,7 @@ class ProductListView(ListView):
         return context
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(ProductSuperMixin, CreateView):
     model = Product
     form_class = ProductForm
     template_name = "product/create.html"
@@ -70,7 +71,7 @@ class ProductCreateView(CreateView):
         return context
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(ProductSuperMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = "product/create.html"
@@ -89,7 +90,7 @@ class ProductUpdateView(UpdateView):
         return context
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(ProductSuperMixin, DeleteView):
     model = Product
     template_name = "product/delete.html"
     success_url = reverse_lazy("erp:product_list")

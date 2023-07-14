@@ -8,6 +8,7 @@ from django.forms.widgets import TextInput
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from SalesPoint.core.erp.mixins import ClientSuperMixin
 
 
 class ClientListView(ListView):
@@ -55,7 +56,7 @@ class ClientCreateView(CreateView):
         return context
 
 
-class ClientUpdateView(UpdateView):
+class ClientUpdateView(ClientSuperMixin, UpdateView):
     model = Client
     form_class = ClientForm
     template_name = "client/create.html"
@@ -75,7 +76,7 @@ class ClientUpdateView(UpdateView):
         return context
 
 
-class ClientDeleteView(DeleteView):
+class ClientDeleteView(ClientSuperMixin, DeleteView):
     model = Client
     template_name = "client/delete.html"
     success_url = reverse_lazy("erp:client_list")

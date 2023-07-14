@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "SalesPoint.core.erp",
     "SalesPoint.core.homepage",
     "SalesPoint.core.reports",
+    "SalesPoint.core.login",
 ]
 
 MIDDLEWARE = [
@@ -54,7 +55,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "SalesPoint.urls"
+ROOT_URLCONF = "configs.urls"
 
 TEMPLATES = [
     {
@@ -72,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "SalesPoint.wsgi.application"
+WSGI_APPLICATION = "configs.wsgi.application"
 
 
 # Database

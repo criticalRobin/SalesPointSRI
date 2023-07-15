@@ -7,7 +7,7 @@ import uuid
 django_project_path = (
     "C:/Users/Matias/OneDrive/Escritorio/Data_Structure/SalesPoint/SalesPoint"
 )
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "SalesPoint.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "configs.settings")
 sys.path.append(django_project_path)
 django.setup()
 from SalesPoint.core.erp.models import SaleDetails
@@ -80,6 +80,7 @@ try:
         total_descuento.text = "0.00"
 
         total_con_impuestos = ET.SubElement(info_factura, "totalConImpuestos")
+        total_con_impuestos.text = str(sale.total)
         total_impuesto = ET.SubElement(total_con_impuestos, "totalImpuesto")
         codigo = ET.SubElement(total_impuesto, "codigo")
         codigo.text = "2"
@@ -88,7 +89,7 @@ try:
         base_imponible = ET.SubElement(total_impuesto, "baseImponible")
         base_imponible.text = "1.000"
         valor = ET.SubElement(total_impuesto, "valor")
-        valor.text = str(sale.iva)
+        valor.text = "0.12"
 
         propina = ET.SubElement(info_factura, "propina")
         propina.text = "0.00"

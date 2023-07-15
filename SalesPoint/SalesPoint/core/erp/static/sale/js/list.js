@@ -22,7 +22,6 @@ $(function () {
             { "data": "client.surnames" },
             { "data": "date_sale" },
             { "data": "subtotal" },
-            // { "data": "iva" },
             { "data": "total" },
             { "data": "id" },
         ],
@@ -39,15 +38,6 @@ $(function () {
                 targets: [-1],
                 class: 'text-center',
                 orderable: false,
-                // render: function (data, type, row) {
-                //     var buttons =  '<a rel="details" class="btn btn-success btn-flat"><i class="fas fa-search"></i></a> ';
-                //     //'<a href="/erp/venta/eliminar/' + row.id + '/" class="btn btn-danger btn-flat"><i class="fas fa-trash-alt"></i></a> ';
-                //     //buttons += '<a rel="details" class="btn btn-success btn-flat"><i class="fas fa-search"></i></a> ';
-                //     buttons += '<a href="/erp/venta/xml/' + row.id + '/" class="btn btn-primary btn-flat"><i class="fas fa-file"></i></a>';
-                //     //var buttons = '<a href="/erp/sale/update/' + row.id + '/" class="btn btn-warning btn-xs btn-flat"><i class="fas fa-edit"></i></a> ';
-                //     buttons += '<a href="/erp/venta/pdf/' + row.id + '/" class="btn btn-danger btn-flat"><i class="fas fa-file-pdf"></i></a>';
-                //     return buttons;
-                // }
                 render: function (data, type, row) {
                     var buttons =  '<a rel="details" class="btn btn-success btn-flat mr-1"><i class="fas fa-search"></i></a> ';
                     buttons += '<a href="/erp/venta/xml/' + row.id + '/" class="btn btn-primary btn-flat mr-1"><i class="fas fa-file"></i></a>';
@@ -62,53 +52,63 @@ $(function () {
     });
 
     $('#data tbody')
-        .on('click', 'a[rel="details"]', function () {
-            var tr = tblSale.cell($(this).closest('td, li')).index();
-            var data = tblSale.row(tr.row).data();
-            console.log(data);
+    .on('click', 'a[rel="details"]', function () {
+        var tr = tblSale.cell($(this).closest('td, li')).index();
+        var data = tblSale.row(tr.row).data();
+        console.log(data);
 
-            $('#tblDet').DataTable({
-                responsive: true,
-                autoWidth: false,
-                destroy: true,
-                deferRender: true,
-                ajax: {
-                    url: window.location.pathname,
-                    type: 'POST',
-                    data: {
-                        'action': 'search_details_prod',
-                        'id': data.id
-                    },
-                    dataSrc: "saledetails_set" // Cambio en la propiedad dataSrc
+        $('#tblDet').DataTable({
+            responsive: true,
+            autoWidth: false,
+            destroy: true,
+            deferRender: true,
+            //data: data.det,
+            ajax: {
+                url: window.location.pathname,
+                type: 'POST',
+                data: {
+                    'action': 'search_details_prod',
+                    'id': data.id
                 },
-                columns: [
-                    { "data": "product.name" },
-                    { "data": "product.category.name" },
-                    { "data": "price" },
-                    { "data": "amount" },
-                    { "data": "subtotal" },
-                ],
-                columnDefs: [
-                    {
-                        targets: [-1, -3],
-                        class: 'text-center',
-                        render: function (data, type, row) {
-                            return '$' + parseFloat(data).toFixed(2);
-                        }
-                    },
-                    {
-                        targets: [-2],
-                        class: 'text-center',
-                        render: function (data, type, row) {
-                            return data;
-                        }
-                    },
-                ],
-                initComplete: function (settings, json) {
+                dataSrc: ""
+            },
+            columns: [
+                {"data": "product.name"},
+                {"data": "product.category.name"},
+                {"data": "price"},
+                {"data": "amount"},
+                {"data": "subtotal"},
+                {"data": "product.iva"},
+                {"data": "total"},
+            ],
+            columnDefs: [
+                {
+                    targets: [-1, -3, -5],
+                    class: 'text-center',
+                    render: function (data, type, row) {
+                        return '$' + parseFloat(data).toFixed(2);
+                    }
+                },
+                {
+                    targets: [-2],
+                    class: 'text-center',
+                    render: function (data, type, row) {
+                        return  parseFloat(data).toFixed(2) + '%';
+                    }
+                },
+                {
+                    targets: [-4],
+                    class: 'text-center',
+                    render: function (data, type, row) {
+                        return data;
+                    }
+                },
+            ],
+            initComplete: function (settings, json) {
 
-                }
-            });
-
-            $('#myModelDet').modal('show');
+            }
         });
+
+        $('#myModelDet').modal('show');
+    })
 });

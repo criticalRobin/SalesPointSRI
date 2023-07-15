@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "SalesPoint.core.homepage",
     "SalesPoint.core.reports",
     "SalesPoint.core.login",
+    "SalesPoint.core.user",
 ]
 
 MIDDLEWARE = [
@@ -82,7 +83,7 @@ WSGI_APPLICATION = "configs.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "sales_point",
+        "NAME": "data_structure",
         "USER": "root",
         "PASSWORD": "root",
         "HOST": "localhost",
@@ -134,6 +135,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 MEDIA_URL = "/media/"
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/erp/dashboard/"
+AUTH_USER_MODEL = "user.User"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

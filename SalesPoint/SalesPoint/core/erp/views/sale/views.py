@@ -40,7 +40,6 @@ class SaleListView(ListView):
             elif action == "search_details_prod":
                 data = []
                 for i in SaleDetails.objects.filter(sale_id=request.POST["id"]):
-                    print(i)
                     data.append(i.toJSON())
             else:
                 data["error"] = "Ha ocurrido un error"

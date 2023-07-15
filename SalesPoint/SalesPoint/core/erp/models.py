@@ -276,15 +276,11 @@ class SaleDetails(models.Model):
         super().save(*args, **kwargs)  # Guardar nuevamente para actualizar el subtotal
 
     def toJSON(self):
-        item = {
-            'id': self.id,
-            'sale': self.sale_id,  # Cambiar 'sale' por 'sale_id'
-            'product': self.product.toJSON(),
-            'price': format(self.price, ".2f"),
-            'amount': self.amount,
-            'subtotal': format(self.subtotal, ".2f"),
-            'total': format(self.total, ".2f"),
-        }
+        item = model_to_dict(self, exclude=["sale"])
+        item['product'] = self.product.toJSON()
+        item['price'] = format(self.price, '.2f')
+        item['subtotal'] = format(self.subtotal, '.2f')
+        item['total'] = format(self.total, '.2f')
         return item
 
     class Meta:

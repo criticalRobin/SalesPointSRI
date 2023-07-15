@@ -1,0 +1,49 @@
+{% extends 'list.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'lib/datatables-1.13.4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/css/responsive.bootstrap4.min.css' %}">
+<script src="{% static 'lib/datatables-1.13.4/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'lib/datatables-1.13.4/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'lib/datatables-1.13.4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'lib/datatables-1.13.4/plugins/responsive-2.4.1/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'user/js/list.js' %}"></script>
+{% endblock %}
+
+{% block message %}
+  <h1 class="m-0 text-dark"> Bienvenido <small>Área de Usuarios</small></h1>
+{% endblock message %}
+
+{% block name %}
+<h3 class="card-title">Lista de Usuarios</h3>
+{% endblock name %}
+
+{% block columns %}
+    <tr>
+        <th>Nro</th>
+        <th>Nombres</th>
+        <th>Apellidos</th>
+        <th>Username</th>
+        <th>Última vez logeado</th>
+        <th>Fecha de registro</th>
+        <th>Imagen</th>
+        <th>Opciones</th>
+    </tr>
+{% endblock %}
+
+{% block rows %}
+
+{% endblock %}
+
+{% block foot %}
+<form method="get" action="{% url 'erp:product_create' %}">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-sm btn-info float-left">Añadir Nuevo Usuario <i class='fas fa-plus-circle'></i></button>
+</form>
+{% endblock foot %}
+
+{% block javascript %}
+
+{% endblock %}

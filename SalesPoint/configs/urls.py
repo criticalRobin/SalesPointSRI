@@ -25,5 +25,6 @@ urlpatterns = [
     path("login/", include("SalesPoint.core.login.urls")),
     path("erp/", include("SalesPoint.core.erp.urls")),
     path("", IndexView.as_view(), name="index"),
+    path("usr/", include("SalesPoint.core.user.urls")),
     path("rpt/", include("SalesPoint.core.reports.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

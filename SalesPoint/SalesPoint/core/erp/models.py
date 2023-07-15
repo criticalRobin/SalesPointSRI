@@ -126,12 +126,12 @@ class Client(models.Model):
         validators=[email_validator],
     )
     GENDER_CHOICES = [
-        ("male", "Masculino"),
-        ("female", "Femenino"),
-        ("other", "Otro"),
+        ("Masculino", "Masculino"),
+        ("Femenino", "Femenino"),
+        ("Otro", "Otro"),
     ]
     gender = models.CharField(
-        max_length=10, choices=GENDER_CHOICES, default="male", verbose_name="Sexo"
+        max_length=10, choices=GENDER_CHOICES, default="Masculino", verbose_name="Sexo"
     )
 
     def clean(self):

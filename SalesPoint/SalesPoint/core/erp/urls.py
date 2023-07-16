@@ -4,6 +4,7 @@ from SalesPoint.core.erp.views.category.views import *
 from SalesPoint.core.erp.views.client.views import *
 from SalesPoint.core.erp.views.product.views import *
 from SalesPoint.core.erp.views.sale.views import *
+from SalesPoint.core.erp.views.entity.views import *
 from SalesPoint.core.erp.views.tests.views import *
 
 app_name = "erp"
@@ -42,11 +43,14 @@ urlpatterns = [
         ProductDeleteView.as_view(),
         name="product_delete",
     ),
+    path("producto/editar_iva/", CategoryIVAUpdateView.as_view(), name="category_iva"),
     # URLS DE LA PARTE DE VENTAS
     path("venta/listado", SaleListView.as_view(), name="sale_list"),
     path("venta/agregar/", SaleCreateView.as_view(), name="sale_create"),
     path("venta/pdf/<int:pk>/", SaleInvoicePdf.as_view(), name="sale_pdf"),
     path("venta/xml/<int:pk>/", SaleGenerateXml.as_view(), name="sale_xml"),
+    # URSL DE LA PARTE DE ENTIDADES
+    path("entidad/editar/<int:pk>/", EntityUpdateView.as_view(), name="entity_update"),
     # test
     path("test/", TestView.as_view(), name="test"),
 ]

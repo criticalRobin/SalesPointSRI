@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from decimal import Decimal
 from django.db import models
 from datetime import datetime
@@ -7,6 +8,8 @@ from django.core.validators import RegexValidator
 import re
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
+from configs.settings import STATIC_URL
+from configs.settings import MEDIA_URL
 
 # Create your models here.
 
@@ -42,11 +45,28 @@ class Entity(models.Model):
     enviroment = models.CharField(
         max_length=10, choices=ENVIROMENT_CHOICES, verbose_name="Entorno"
     )
+    
+    def get_logo(self):
+        if self.logo:
+            return '{}{}'.format(MEDIA_URL, self.logo)
+        return '{}{}'.format(STATIC_URL, 'img/noviaaaa.jpg')
+    
+    def get_commercial_name(self):
+        return self.commercial_name if self.commercial_name else ""
 
+    def my_view(request):
+        my_entity = Entity.objects.get(pk=1)
+
+        context = {
+            'request': request,
+            'logo_url': my_entity.get_logo(),  # Agregamos el logo como 'logo_url'
+            'commercial_name': my_entity.get_commercial_name(),  # Agregamos el nombre comercial
+        }
+
+        return render(request, 'sidebar.html', context)
+    
     def __str__(self):
         return f"{self.social_reason}"
-
-    # def toJSON(self):
 
     class Meta:
         verbose_name = "Entidad"
@@ -64,6 +84,10 @@ def ecuadorian_dni_validator(dni):
             return True
     return False
 
+def passport_validator(passport_number):
+    passport_pattern = r"^[a-zA-Z0-9]{6,}$"
+    return bool(re.match(passport_pattern, passport_number))
+
 
 class Client(models.Model):
     names = models.CharField(
@@ -76,11 +100,21 @@ class Client(models.Model):
         verbose_name="Apellidos",
         validators=[RegexValidator(r"^[a-zA-Z]*$", "Solo se permiten letras")],
     )
+    ID_TYPE_CHOICES = [
+        ("Cedula", "Cédula"),
+        ("RUC", "RUC"),
+        ("Pasaporte", "Pasaporte"),
+    ]
+    id_type = models.CharField(
+        max_length=10, choices=ID_TYPE_CHOICES, default="Cedula", verbose_name="Tipo de Identificación"
+    )
     dni = models.CharField(
-        max_length=10,
-        validators=[MinLengthValidator(10)],
+        max_length=13,  # Aumenta la capacidad del campo para permitir más caracteres
+        validators=[
+            MinLengthValidator(6),  # Ajusta el valor según el requisito mínimo para identificaciones, como el pasaporte
+        ],
         unique=True,
-        verbose_name="Cédula",
+        verbose_name="Cédula, RUC o Pasaporte",
     )
     birth = models.DateField(default=datetime.now, verbose_name="Fecha de nacimiento")
 
@@ -136,8 +170,21 @@ class Client(models.Model):
 
     def clean(self):
         super().clean()
-        if not ecuadorian_dni_validator(self.dni):
-            raise ValidationError("La cédula no es válida para Ecuador.")
+
+        if self.id_type == "Cedula":
+            if not ecuadorian_dni_validator(self.dni):
+                raise ValidationError("La cédula no es válida para Ecuador.")
+
+        elif self.id_type == "RUC":
+            if not self.dni.isdigit() or len(self.dni) != 13:
+                raise ValidationError("El RUC debe contener 13 dígitos numéricos válidos.")
+
+        elif self.id_type == "Pasaporte":
+            if not passport_validator(self.dni):
+                raise ValidationError("El número de pasaporte no es válido.")           
+
+        else:
+            raise ValidationError("Tipo de identificación no válido.")
 
     def __str__(self):
         return f"{self.names} {self.surnames}"

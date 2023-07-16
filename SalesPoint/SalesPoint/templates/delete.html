@@ -40,8 +40,8 @@
             </div>
         </div>
     </form>
-    {% comment %} <script>
-        $('form').on('submit', function (e) {
+    <script>
+        {% comment %} $('form').on('submit', function (e) {
             e.preventDefault();
             var parameters = $(this).serializeArray();
             submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de eliminar el siguiente registro?', parameters, function () {

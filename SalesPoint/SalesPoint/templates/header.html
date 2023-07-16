@@ -13,12 +13,8 @@
       <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
         <span class="dropdown-header">Último Acceso: {{ request.user.get_last_login }}</span>
         <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item">
-          <i class="fas fa-edit mr-2"></i> Editar perfil
-          <span class="float-right text-muted text-sm"></span>
-        </a>
         <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item">
+        <a href="{% url 'usr:user_change_password' request.user.pk %}" class="dropdown-item">
           <i class="fas fa-lock mr-2"></i> Editar password
           <span class="float-right text-muted text-sm"></span>
         </a>

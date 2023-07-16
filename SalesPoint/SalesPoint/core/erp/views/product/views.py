@@ -1,7 +1,8 @@
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.views import View
 from SalesPoint.core.erp.models import Product
-from SalesPoint.core.erp.forms import ProductForm
+from SalesPoint.core.erp.forms import ProductForm, CategoryIVAForm
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -88,6 +89,40 @@ class ProductUpdateView(ProductSuperMixin, UpdateView):
         context["list_url"] = reverse_lazy("erp:product_list")
         context["entity"] = "Productos"
         return context
+    
+
+class CategoryIVAUpdateView(ProductSuperMixin, View):
+    template_name = "product/create.html"
+    success_url = reverse_lazy("erp:product_list")
+
+    @method_decorator(csrf_exempt)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        form = CategoryIVAForm()
+        return render(request, self.template_name, {"form": form})
+
+    def post(self, request, *args, **kwargs):
+        form = CategoryIVAForm(request.POST)
+        if form.is_valid():
+            category = form.cleaned_data["category"]
+            new_iva_choice = form.cleaned_data["new_iva"]
+            new_iva_value = form.cleaned_data["new_iva_value"]
+
+            products_in_category = Product.objects.filter(category=category)
+
+            if new_iva_choice == "custom":
+                # Si se selecciona "custom", se actualizará con el nuevo valor ingresado por teclado
+                products_in_category.update(iva=str(new_iva_value))
+            else:
+                # Si se selecciona alguna de las opciones predefinidas, se actualizará con esa opción
+                products_in_category.update(iva=new_iva_choice)
+
+            return redirect(self.success_url)
+
+        return render(request, self.template_name, {"form": form})
 
 
 class ProductDeleteView(ProductSuperMixin, DeleteView):

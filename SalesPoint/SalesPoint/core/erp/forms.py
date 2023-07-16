@@ -1,6 +1,8 @@
+from decimal import Decimal
 from django.forms import *
 from django import forms
 from SalesPoint.core.erp.models import Category, Client, Product, Sale, Entity
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class EntityForm(ModelForm):
@@ -89,6 +91,26 @@ class ProductForm(ModelForm):
             "image": "Imagen",
             "pvp": "Precio",
         }
+
+
+class CategoryIVAForm(forms.Form):
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        label="Categoría",
+        widget=forms.Select(attrs={"class": "form-control"}),
+    )
+    new_iva = forms.ChoiceField(
+        choices=[("custom", "Ingresar por teclado")],
+        label="Nuevo IVA",
+        widget=forms.Select(attrs={"class": "form-control"}),
+    )
+    new_iva_value = forms.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        validators=[MinValueValidator(Decimal("0.00")), MaxValueValidator(Decimal("100.00"))],
+        label="Nuevo IVA (Ingresar por teclado)",
+        widget=forms.NumberInput(attrs={"class": "form-control"}),
+    )
 
 
 class SaleForm(ModelForm):

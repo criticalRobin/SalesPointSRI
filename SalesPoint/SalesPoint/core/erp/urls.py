@@ -43,6 +43,7 @@ urlpatterns = [
         ProductDeleteView.as_view(),
         name="product_delete",
     ),
+    path("producto/editar_iva/", CategoryIVAUpdateView.as_view(), name="category_iva"),
     # URLS DE LA PARTE DE VENTAS
     path("venta/listado", SaleListView.as_view(), name="sale_list"),
     path("venta/agregar/", SaleCreateView.as_view(), name="sale_create"),

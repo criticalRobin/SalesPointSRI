@@ -1,6 +1,32 @@
 from django.forms import *
 from django import forms
-from SalesPoint.core.erp.models import Category, Client, Product, Sale
+from SalesPoint.core.erp.models import Category, Client, Product, Sale, Entity
+
+
+class EntityForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs["class"] = "form-control"
+            form.field.widget.attrs["autocomplete"] = "off"
+            form.field.widget.attrs["placeholder"] = "Ingrese " + form.label.lower()
+        self.fields["ruc"].widget.attrs["autofocus"] = True
+
+    class Meta:
+        model = Entity
+        fields = "__all__"
+        labels = {
+            "ruc": "RUC",
+            "social_reason": "Razón Social",
+            "commercial_name": "Nombre Comercial",
+            "main_address": "Dirección Matriz",
+            "stablishment_address": "Dirección Establecimiento",
+            "stablishment_code": "Código Establecimiento",
+            "emition_point_code": "Código Punto de Emisión",
+            "contability_obligation": "Obligado a llevar contabilidad",
+            "logo": "Logo",
+            "enviroment": "Entorno",
+        }
 
 
 class CategoryForm(ModelForm):

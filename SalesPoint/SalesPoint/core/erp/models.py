@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from decimal import Decimal
 from django.db import models
 from datetime import datetime
@@ -7,6 +8,8 @@ from django.core.validators import RegexValidator
 import re
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
+from configs.settings import STATIC_URL
+from configs.settings import MEDIA_URL
 
 # Create your models here.
 
@@ -42,11 +45,28 @@ class Entity(models.Model):
     enviroment = models.CharField(
         max_length=10, choices=ENVIROMENT_CHOICES, verbose_name="Entorno"
     )
+    
+    def get_logo(self):
+        if self.logo:
+            return '{}{}'.format(MEDIA_URL, self.logo)
+        return '{}{}'.format(STATIC_URL, 'img/noviaaaa.jpg')
+    
+    def get_commercial_name(self):
+        return self.commercial_name if self.commercial_name else ""
 
+    def my_view(request):
+        my_entity = Entity.objects.get(pk=1)
+
+        context = {
+            'request': request,
+            'logo_url': my_entity.get_logo(),  # Agregamos el logo como 'logo_url'
+            'commercial_name': my_entity.get_commercial_name(),  # Agregamos el nombre comercial
+        }
+
+        return render(request, 'sidebar.html', context)
+    
     def __str__(self):
         return f"{self.social_reason}"
-
-    # def toJSON(self):
 
     class Meta:
         verbose_name = "Entidad"

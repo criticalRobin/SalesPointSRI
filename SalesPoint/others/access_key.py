@@ -1,9 +1,22 @@
 from datetime import datetime
 import re
+import os
+import django
+import sys
+import xml.etree.ElementTree as ET
+import uuid
 
+django_project_path = (
+    "C:/Users/Matias/OneDrive/Escritorio/Data_Structure/SalesPoint/SalesPoint"
+)
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "configs.settings")
+sys.path.append(django_project_path)
+django.setup()
+from SalesPoint.core.erp.models import Entity
 
 class AccessKey:
-    current_date = datetime.now()
+    # uncluir el miso date de la venta
+    current_date = datetime.now() 
     current_date_string = current_date.strftime("%d%m%Y")
     receipt_type = "01"
     ruc = ""
@@ -15,12 +28,13 @@ class AccessKey:
     numerical_code = "12345678"
     emition_type = "1"
     verification_digit = ""
+    
+    
 
-    def __init__(self, ruc, bussiness_code, emition_code, sequuential_number):
+    def __init__(self, ruc, series, sequential_number):
         self.ruc = ruc
-        self.bussiness_code = bussiness_code
-        self.emition_code = emition_code
-        self.sequential_number = sequuential_number
+        self.series = series
+        self.sequential_number = sequential_number
 
     def set_digit_verification(self, cdg48):
         if not cdg48.isdigit():
@@ -32,7 +46,6 @@ class AccessKey:
                 add += int(cdg48[i]) * fac
             else:
                 add += int(cdg48[i : i + 1]) * fac
-            print(add)
 
             if fac == 7:
                 fac = 2
@@ -45,21 +58,30 @@ class AccessKey:
             return 1
         elif dv == 11:
             return 0
-
         return dv
 
+    def generate_access_key(self):
+        access_key_data = (
+            self.current_date_string
+            +self.receipt_type
+            + self.ruc
+            + self.enviroment_type
+            + self.series
+            + self.sequential_number
+            + self.numerical_code
+            + self.emition_type
+        )
+        verification_digit = self.set_digit_verification(access_key_data)
+        self.verification_digit = str(verification_digit)
+        return access_key_data + self.verification_digit
 
-# a = AccessKey("2110201101179", "001", "001", "000000001")
-# print(a.set_digit_verification("211020110117921467390011002001000000001123456781"))
+entity = Entity.objects.first()
+ruc = entity.ruc
+bussiness_code = entity.stablishement_code
+emition_code = entity.emition_point_code
+sequential_number = "000000008"
+series = bussiness_code + emition_code
+a = AccessKey(ruc, series, sequential_number)
+key = a.generate_access_key()
+print(a.set_digit_verification("280220230199999999999991001110000000003123456781")) 
 
-dni_regex = r"^\d{10}$"
-
-
-def ecuadorian_dni_validator(dni):
-    if re.match(dni_regex, dni):
-        province = int(dni[0:2])
-        if province >= 1 and province <= 24:
-            return True
-    return False
-
-print(ecuadorian_dni_validator("1301234567"))

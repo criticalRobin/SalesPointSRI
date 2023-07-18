@@ -107,7 +107,7 @@ class CategoryIVAForm(forms.Form):
     new_iva_value = forms.DecimalField(
         max_digits=5,
         decimal_places=2,
-        validators=[MinValueValidator(Decimal("0.00")), MaxValueValidator(Decimal("100.00"))],
+        validators=[MinValueValidator(Decimal("0.00")), MaxValueValidator(Decimal("20.00"))],
         label="Nuevo IVA (Ingresar por teclado)",
         widget=forms.NumberInput(attrs={"class": "form-control"}),
     )

@@ -33,7 +33,7 @@ function submit_with_ajax(url, title, content, parameters, callback) {
                 btnClass: 'btn-primary',
                 action: function () {
                     $.ajax({
-                        url: url, //window.location.pathname
+                        url: url,
                         type: 'POST',
                         data: parameters,
                         dataType: 'json',

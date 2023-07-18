@@ -22,7 +22,7 @@ try:
         sale = sales.first().sale
 
         # Crear el elemento raíz del XML
-        root = ET.Element("Venta")
+        root = ET.Element("Factura")
 
         # Crear elementos y asignarles los valores correspondientes
 

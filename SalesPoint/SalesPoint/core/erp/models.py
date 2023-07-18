@@ -253,7 +253,6 @@ class Product(models.Model):
         item["category"] = self.category.toJSON()
         item["image"] = self.image.url if self.image else ""
         item["pvp"] = format(self.pvp, ".2f")
-        # item["iva"] = {"id": self.iva, "name": self.get_iva_display()}
         item["sale_price"] = format(self.calculate_sale_price(), ".2f")
         return item
 

@@ -5,7 +5,7 @@ from django.http import (
     JsonResponse,
 )
 from django.shortcuts import render
-from SalesPoint.core.erp.models import Sale, Product, SaleDetails
+from SalesPoint.core.erp.models import Sale, Product, SaleDetails, Entity
 from SalesPoint.core.erp.forms import SaleForm
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 from django.urls import reverse_lazy
@@ -92,7 +92,7 @@ class SaleCreateView(CreateView):
                         det.price = float(i["pvp"])
                         det.amount = int(i["amount"])
                         det.product_id = i["id"]
-                        det.sale = sale  # Asignar el objeto Sale a SaleDetails
+                        det.sale = sale
                         det.save()
                         det.product.stock -= det.amount
                         det.product.save()
@@ -124,84 +124,15 @@ class SaleCreateView(CreateView):
         return context
 
 
-# class SaleUpdateView(UpdateView):
-#     model = Sale
-#     form_class = SaleForm
-#     template_name = "sale/create.html"
-#     success_url = reverse_lazy("erp:sale_list")
-    
-#     @method_decorator(csrf_exempt)
-#     @method_decorator(login_required)
-#     def dispatch(self, request, *args, **kwargs):
-#         return super().dispatch(request, *args, **kwargs)
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context["title"] = "Edición de una Venta"
-#         context["list_url"] = reverse_lazy("erp:sale_list")
-#         context["entity"] = "Ventas"
-#         return context
-
-
-# class SaleDeleteView(DeleteView):
-#     model = Sale
-#     template_name = "sale/delete.html"
-#     success_url = reverse_lazy("erp:sale_list")
-    
-#     @method_decorator(csrf_exempt)
-#     @method_decorator(login_required)
-#     def dispatch(self, request, *args, **kwargs):
-#         return super().dispatch(request, *args, **kwargs)
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context["title"] = "Eliminación de una Ventas"
-#         context["list_url"] = reverse_lazy("erp:sale_list")
-#         context["entity"] = "Ventas"
-#         return context
-
-
 class SaleInvoicePdf(View):
     @method_decorator(csrf_exempt)
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
-    # def link_callback(self, uri, rel):
-    #         """
-    #         Convert HTML URIs to absolute system paths so xhtml2pdf can access those
-    #         resources
-    #         """
-    #         result = finders.find(uri)
-    #         if result:
-    #                 if not isinstance(result, (list, tuple)):
-    #                         result = [result]
-    #                 result = list(os.path.realpath(path) for path in result)
-    #                 path=result[0]
-    #         else:
-    #                 sUrl = settings.STATIC_URL        # Typically /static/
-    #                 sRoot = settings.STATIC_ROOT      # Typically /home/userX/project_static/
-    #                 mUrl = settings.MEDIA_URL         # Typically /media/
-    #                 mRoot = settings.MEDIA_ROOT       # Typically /home/userX/project_static/media/
-
-    #                 if uri.startswith(mUrl):
-    #                         path = os.path.join(mRoot, uri.replace(mUrl, ""))
-    #                 elif uri.startswith(sUrl):
-    #                         path = os.path.join(sRoot, uri.replace(sUrl, ""))
-    #                 else:
-    #                         return uri
-
-    #         # make sure that file exists
-    #         if not os.path.isfile(path):
-    #                 raise Exception(
-    #                         'media URI must start with %s or %s' % (sUrl, mUrl)
-    #                 )
-    #         return path
 
     def get(self, request, *args, **kwargs):
         try:
             sale = Sale.objects.get(pk=self.kwargs["pk"])
-            # products_iva_12 = sale.details.filter(product__iva="12.00")
-            # iva_12_total = sum(product.subtotal * Decimal("0.12") for product in products_iva_12)
             template = get_template("sale/invoice.html")
             context = {
                 "sale": sale,
@@ -210,7 +141,6 @@ class SaleInvoicePdf(View):
                     "ruc": "9999999999999",
                     "address": "Su Corazón",
                 },
-                # "iva_12_total": iva_12_total,
             }
             html = template.render(context)
             response = HttpResponse(content_type="application/pdf")
@@ -221,52 +151,118 @@ class SaleInvoicePdf(View):
         return HttpResponseRedirect(reverse_lazy("erp:sale_create"))
     
     
+class AccessKey:
+    receipt_type = "01"
+    ruc = ""
+    enviroment_type = "1"
+    bussiness_code = ""
+    emition_code = ""
+    series = bussiness_code + emition_code
+    sequential_number = ""
+    numerical_code = "12345678"
+    emition_type = "1"
+    verification_digit = ""
+    
+    
+
+    def __init__(self, current_date, ruc, series, sequential_number):
+        self.current_date = current_date
+        self.ruc = ruc
+        self.series = series
+        self.sequential_number = sequential_number
+        self.current_date_string = current_date.strftime("%d%m%Y")
+
+    def set_digit_verification(self, cdg48):
+        if not cdg48.isdigit():
+            return -1
+        add = 0
+        fac = 2
+        for i in range(len(cdg48) - 1, -1, -1):
+            if i == len(cdg48) - 1:
+                add += int(cdg48[i]) * fac
+            else:
+                add += int(cdg48[i : i + 1]) * fac
+
+            if fac == 7:
+                fac = 2
+            else:
+                fac += 1
+
+        dv = 11 - (add % 11)
+
+        if dv == 10:
+            return 1
+        elif dv == 11:
+            return 0
+        return dv
+
+    def generate_access_key(self):
+        access_key_data = (
+            self.current_date_string
+            +self.receipt_type
+            + self.ruc
+            + self.enviroment_type
+            + self.series
+            + self.sequential_number
+            + self.numerical_code
+            + self.emition_type
+        )
+        verification_digit = self.set_digit_verification(access_key_data)
+        self.verification_digit = str(verification_digit)
+        return access_key_data + self.verification_digit    
+    
+    
 class SaleGenerateXml(View):
     def get(self, request, *args, **kwargs):
         try:
             sale_id = self.kwargs["pk"]
             sales = SaleDetails.objects.filter(sale_id=sale_id)
+            entity = Entity.objects.first()
+            sale = sales.first().sale
+            date = sale.date_sale
+            bussiness_code = entity.stablishement_code
+            emition_code = entity.emition_point_code
+            series = bussiness_code + emition_code
+            sequential_number = str(sale_id).zfill(9)
+            access = AccessKey(date, entity.ruc, series, sequential_number)
+            key = access.generate_access_key()
             
             if sales.exists():
                 sale = sales.first().sale
                 
-                # Crear el elemento raíz del XML
-                root = ET.Element("Venta")
+                root = ET.Element("factura", id="comprobante", version="version0")
 
-                # Crear elementos y asignarles los valores correspondientes
-
-                # Agregar campos adicionales
                 info_tributaria = ET.SubElement(root, "infoTributaria")
                 ambiente = ET.SubElement(info_tributaria, "ambiente")
                 ambiente.text = "1"
                 tipo_emision = ET.SubElement(info_tributaria, "tipoEmision")
                 tipo_emision.text = "1"
                 razon_social = ET.SubElement(info_tributaria, "razonSocial")
-                razon_social.text = "LOS TILINES S.A"
+                razon_social.text = str(entity.social_reason)
                 nombre_comercial = ET.SubElement(info_tributaria, "nombreComercial")
-                nombre_comercial.text = "LOS TILINES S.A"
+                nombre_comercial.text = str(entity.commercial_name)
                 ruc = ET.SubElement(info_tributaria, "ruc")
-                ruc.text = "1805472386001"
+                ruc.text = str(entity.ruc)
                 clave_acceso = ET.SubElement(info_tributaria, "claveAcceso")
-                clave_acceso.text = "2110201101179214673900110020010000000011234567813"
+                clave_acceso.text = str(key)
                 cod_doc = ET.SubElement(info_tributaria, "codDoc")
                 cod_doc.text = "01"
                 estab = ET.SubElement(info_tributaria, "estab")
-                estab.text = "002"
+                estab.text = str(entity.stablishement_code)
                 pto_emi = ET.SubElement(info_tributaria, "ptoEmi")
-                pto_emi.text = "001"
+                pto_emi.text = str(entity.emition_point_code)
                 secuencial = ET.SubElement(info_tributaria, "secuencial")
-                secuencial.text = "000000001"
+                secuencial.text = str(sequential_number)
                 dir_matriz = ET.SubElement(info_tributaria, "dirMatriz")
-                dir_matriz.text = "LA UTA"
+                dir_matriz.text = str(entity.main_address)
 
                 info_factura = ET.SubElement(root, "infoFactura")
                 fecha_emision = ET.SubElement(info_factura, "fechaEmision")
                 fecha_emision.text = str(sale.date_sale)
                 dir_establecimiento = ET.SubElement(info_factura, "dirEstablecimiento")
-                dir_establecimiento.text = "LA UTA"
+                dir_establecimiento.text = str(entity.stablishement_address)
                 obligado_contabilidad = ET.SubElement(info_factura, "obligadoContabilidad")
-                obligado_contabilidad.text = "SI"
+                obligado_contabilidad.text = str(entity.contability_obligation)
                 tipo_identificacion_comprador = ET.SubElement(
                     info_factura, "tipoIdentificacionComprador"
                 )
@@ -277,19 +273,13 @@ class SaleGenerateXml(View):
                     info_factura, "identificacionComprador"
                 )
                 identificacion_comprador.text = sale.client.dni
-
-                # Agregar más campos adicionales
-                id_compra = ET.SubElement(info_factura, "idCompra")
-                id_compra.text = str(sale.pk)
-
                 total_sin_impuestos = ET.SubElement(info_factura, "totalSinImpuestos")
                 total_sin_impuestos.text = str(sale.subtotal)
-
                 total_descuento = ET.SubElement(info_factura, "totalDescuento")
                 total_descuento.text = "0.00"
 
+                
                 total_con_impuestos = ET.SubElement(info_factura, "totalConImpuestos")
-                total_con_impuestos.text = str(sale.total)
                 total_impuesto = ET.SubElement(total_con_impuestos, "totalImpuesto")
                 codigo = ET.SubElement(total_impuesto, "codigo")
                 codigo.text = "2"
@@ -298,13 +288,13 @@ class SaleGenerateXml(View):
                 base_imponible = ET.SubElement(total_impuesto, "baseImponible")
                 base_imponible.text = "1.000"
                 valor = ET.SubElement(total_impuesto, "valor")
-                valor.text = "0.12"
+                valor.text = "0"
 
                 propina = ET.SubElement(info_factura, "propina")
                 propina.text = "0.00"
 
                 importe_total = ET.SubElement(info_factura, "importeTotal")
-                importe_total.text = "1.00"
+                importe_total.text = "1.00" 
 
                 moneda = ET.SubElement(info_factura, "moneda")
                 moneda.text = "DOLAR"
@@ -332,36 +322,37 @@ class SaleGenerateXml(View):
                     precio_unitario = ET.SubElement(detalle, "precioUnitario")
                     precio_unitario.text = str(sale_detail.price)
                     descuento = ET.SubElement(detalle, "descuento")
-                    descuento.text = "0.00"  # Puedes ajustar este valor según tus necesidades
+                    descuento.text = "0.00"
                     precio_total_sin_impuesto = ET.SubElement(detalle, "precioTotalSinImpuesto")
                     precio_total_sin_impuesto.text = str(sale_detail.subtotal)
                     impuestos = ET.SubElement(detalle, "impuestos")
                     impuesto = ET.SubElement(impuestos, "impuesto")
                     codigo_impuesto = ET.SubElement(impuesto, "codigo")
                     codigo_impuesto.text = (
-                        "2"  # Puedes ajustar este valor según tus necesidades
+                        "2"  
                     )
                     codigo_porcentaje_impuesto = ET.SubElement(impuesto, "codigoPorcentaje")
                     codigo_porcentaje_impuesto.text = (
-                        "2"  # Puedes ajustar este valor según tus necesidades
+                        "2" 
                     )
                     tarifa = ET.SubElement(impuesto, "tarifa")
-                    tarifa.text = "0.00"  # Puedes ajustar este valor según tus necesidades
+                    tarifa.text = "0.00" 
                     base_imponible_impuesto = ET.SubElement(impuesto, "baseImponible")
                     base_imponible_impuesto.text = str(sale_detail.subtotal)
                     valor_impuesto = ET.SubElement(impuesto, "valor")
-                    valor_impuesto.text = "0.00"
+                    valor_impuesto.text = str(sale_detail.subtotal) 
 
                 info_adicional = ET.SubElement(root, "infoAdicional")
                 campo_adicional = ET.SubElement(info_adicional, "campoAdicional")
-                campo_adicional.text = "hcortez2386@uta.edu.ec"
+                campo_adicional.text = str(sale.client.mail)
                 campo_adicional.set("nombre", "correo")
-                xml_content = ET.tostring(root, encoding="utf-8")
 
-                # Devolver el XML como una respuesta HTTP
+                xml_string = ET.tostring(root, encoding="utf-8")
+                xml_with_declaration = b'<?xml version="1.0" encoding="utf-8"?>\n' + xml_string
+
                 response = HttpResponse(content_type="application/xml")
                 response["Content-Disposition"] = f'attachment; filename="venta_{sale_id}.xml"'
-                response.write(xml_content)
+                response.write(xml_with_declaration)
                 return response
             else:
                 return HttpResponse("No se encontraron detalles de venta para el ID proporcionado")
